@@ -53,7 +53,7 @@ public class StoryLoader {
 
             JSONArray chaptersArrayJSON = content.getJSONArray("chapters");
             for (int i=0; i<chaptersArrayJSON.length(); i++) {
-                Log.d("JSON","chapter  "+i + " of " + chaptersArrayJSON.length());
+                //Log.d("JSON","chapter  "+i + " of " + chaptersArrayJSON.length());
                 JSONObject chapterJSON = chaptersArrayJSON.getJSONObject(i);
                 // make a new chapter
                 Chapter chapter = new Chapter();
@@ -65,13 +65,13 @@ public class StoryLoader {
                 chapter.captions = new ArrayList<Chapter.Caption>();
 
                 for (int j=0; j<captionsJSON.length(); j++) {
-                    Log.d("JSON","caption  "+j + " of " + captionsJSON.length());
+                    //Log.d("JSON","caption  "+j + " of " + captionsJSON.length());
                     JSONObject captionJSON = captionsJSON.getJSONObject(j);
                     Chapter.Caption caption = new Chapter.Caption();
                     caption.start = captionJSON.getInt("start");
                     caption.end = captionJSON.getInt("end");
                     caption.body = captionJSON.getString("body");
-                    Log.d("JSON",caption.body);
+                    //Log.d("JSON",caption.body);
                     chapter.captions.add(caption);
                 }
 

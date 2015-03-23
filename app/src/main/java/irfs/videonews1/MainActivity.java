@@ -7,12 +7,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ScrollView;
 import android.widget.VideoView;
 
 import org.json.JSONException;
@@ -20,16 +25,22 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements ContentPane.UpdatePercentListener {
 
     private VideoView mainVideo;
     private MediaController mediaControls;
+    private ArrayList<TimelineElement> timelineElements = new ArrayList<TimelineElement>();
 
     // pager widget
     private ViewPager mPager;
     private PagerAdapter mPagerAdapter;
+
+    private LinearLayout timelineLayout;
+    private HorizontalScrollView timelineScrollView;
+
 
     private Story story;
 
@@ -50,22 +61,72 @@ public class MainActivity extends ActionBarActivity {
         mPager.setAdapter(mPagerAdapter);
 
 
+        timelineLayout = (LinearLayout) findViewById(R.id.timelineLayout);
+        timelineScrollView = (HorizontalScrollView) findViewById(R.id.timelineScrollView);
 
+        for (int i=0;i<story.chapters.size(); i++) {
+            TimelineElement newEl = new TimelineElement(this,i);
+            newEl.setTag(i);
+            newEl.setText(story.chapters.get(i).title);
+            newEl.setPercent(0);
+            newEl.setActive(false);
+            newEl.setClickable(true);
+
+            newEl.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int page = (int) v.getTag();
+                    Log.d("buttonClick2","button2  clicked " + page);
+                    goToPage(page);
+
+                    //context.goToPage((int) v.getTag());
+
+                }
+            });
+            //newButton.setText(story.chapters.get(i).title);
+
+            timelineElements.add(newEl);
+            timelineLayout.addView(newEl);
+        }
+
+        timelineElements.get(0).setActive(true);
 
 
     }
-
-
 
     @Override
     public void onBackPressed() {
         if (mPager.getCurrentItem() == 0) {
             super.onBackPressed();
         } else {
-            mPager.setCurrentItem(mPager.getCurrentItem()-1);
+            //mPager.setCurrentItem(mPager.getCurrentItem()-1,true);
+            goToPage(mPager.getCurrentItem()-1);
         }
     }
 
+    public void goToPage(int i)
+    {
+        int oldEl = mPager.getCurrentItem();
+        timelineElements.get(oldEl).setPercent(0);
+        timelineElements.get(oldEl).setActive(false);
+
+        mPager.setCurrentItem(i);
+
+        timelineElements.get(i).setActive(true);
+
+        float scrollLoc = timelineElements.get(i).getX() - 50;
+        timelineScrollView.smoothScrollTo((int) scrollLoc,0);
+
+
+
+    }
+
+    @Override
+    public void updatePercent(float percent) {
+        int i = mPager.getCurrentItem();
+
+        timelineElements.get(i).setPercent(percent);
+    }
 
     private class ContentPagerAdapter extends FragmentStatePagerAdapter {
         private static final int NUM_PAGES = 7;
@@ -74,8 +135,8 @@ public class MainActivity extends ActionBarActivity {
         }
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = new ContentPane();
-            Bundle args = new Bundle();
+            //Fragment fragment = new ContentPane();
+            //Bundle args = new Bundle();
             String uri = "";
             if (position ==0) {
                 uri = "android.resource://" + getPackageName() + "/" + R.raw.india1;
@@ -93,13 +154,17 @@ public class MainActivity extends ActionBarActivity {
                 uri = "android.resource://" + getPackageName() + "/" + R.raw.india7;
 
             }
+            /*
             args.putString("uri", uri);
             args.putInt("position",position);
-            Log.d("debug",story.chapters.toString());
             args.putSerializable("chapter",story.chapters.get(position));
             fragment.setArguments(args);
+            fragment.setUserVisibleHint(true);
+            */
 
-            return fragment;
+            ContentPane contentPane = ContentPane.newInstance(position, uri, story.chapters.get(position));
+
+            return contentPane;
         }
         @Override
         public int getCount() {

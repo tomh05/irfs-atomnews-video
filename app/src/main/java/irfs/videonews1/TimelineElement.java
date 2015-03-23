@@ -1,0 +1,139 @@
+package irfs.videonews1;
+
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+/**
+ * Created by tomh on 23/03/15.
+ */
+public class TimelineElement extends RelativeLayout {
+
+    float mPercent = 42;
+    Path bubblePath = new Path();
+    boolean mActive = true;
+    Paint paint = new Paint();
+    float width = 0;
+    TextView textView;
+
+
+    public TimelineElement (final Context context, int position) {
+        super(context);
+
+        setWillNotDraw(false);
+
+        textView = new TextView(context);
+        textView.setText("");
+        textView.setVisibility(View.VISIBLE);
+        textView.setBackgroundColor(Color.TRANSPARENT);
+        //textView.setHeight(120);
+        textView.setPadding(20,20,20,40); //extra space at bottom for arrow.
+        textView.setTextColor(Color.WHITE);
+        textView.setTextSize(18);
+
+        //button.setTag(position);
+
+        this.addView(textView);
+
+
+        Log.d("timelinebutton", "creating path");
+
+    }
+
+
+    public TimelineElement (Context context, AttributeSet attrs) {
+        super(context, attrs);
+        Log.d("timelinebutton", "creating path 2");
+
+    }
+
+    public TimelineElement (Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        Log.d("timelinebutton", "creating path 3");
+
+    }
+
+    public void setText(String _text) {
+        textView.setText(_text);
+
+    }
+
+    public void setPercent(float _percent) {
+        mPercent = _percent;
+        invalidate();
+    }
+
+    public void setActive(boolean _active) {
+        mActive = _active;
+        rebuildPath();
+        invalidate();
+
+    }
+
+    @Override
+    protected void onSizeChanged(int w,int h,int oldw,int oldh) {
+        super.onSizeChanged(w,h,oldw,oldh);
+        width = w;
+
+        rebuildPath();
+
+    }
+
+    private void rebuildPath() {
+        int w = getWidth();
+        int h = getHeight();
+        int arrowSize = 20;
+        bubblePath = new Path();
+        bubblePath.lineTo(w,0);
+        bubblePath.lineTo(w,h-arrowSize);
+        if (mActive) {
+            bubblePath.lineTo(w / 2 + arrowSize, h - arrowSize);
+            bubblePath.lineTo(w / 2, h);
+            bubblePath.lineTo(w / 2 - arrowSize, h - arrowSize);
+        }
+        bubblePath.lineTo(0,h-arrowSize);
+        bubblePath.close();
+
+    }
+    @Override
+    public void draw(Canvas canvas) {
+        //Log.d("timelinebutton", "draw canvas " + bubblePath);
+
+
+        canvas.save();
+        canvas.clipPath(bubblePath);
+
+
+        canvas.drawColor(Color.rgb(200,100,100));
+
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.rgb(200, 0, 0));
+        float barwidth = width * (mPercent / 100.0f);
+        canvas.drawRect(0,0,barwidth,getHeight(),paint);
+
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setColor(Color.WHITE);
+        paint.setStrokeWidth(5);
+        canvas.drawPath(bubblePath,paint);
+
+
+        super.draw(canvas);
+
+        canvas.restore();
+
+    }
+
+    @Override
+    protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec,heightMeasureSpec);
+        setMeasuredDimension(getMeasuredWidth(),getMeasuredHeight());
+    }
+
+}
