@@ -86,6 +86,9 @@ public class TimelineElement extends RelativeLayout {
 
     }
 
+    /*
+    Draw bubble shape with/without arrow, depending on state.
+     */
     private void rebuildPath() {
         int w = getWidth();
         int h = getHeight();
@@ -104,8 +107,6 @@ public class TimelineElement extends RelativeLayout {
     }
     @Override
     public void draw(Canvas canvas) {
-        //Log.d("timelinebutton", "draw canvas " + bubblePath);
-
 
         canvas.save();
         canvas.clipPath(bubblePath);

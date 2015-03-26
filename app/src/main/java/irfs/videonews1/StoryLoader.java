@@ -49,6 +49,13 @@ public class StoryLoader {
             JSONObject content = new JSONObject(jsonString);
 
             story.title = content.getString("title");
+
+            story.initialChapters = new ArrayList<Integer>();
+            JSONArray ic = content.getJSONArray("initial_chapters");
+            for (int i=0; i<ic.length(); i++) {
+                story.initialChapters.add((Integer) ic.get(i));
+            }
+
             story.chapters = new ArrayList<Chapter>();
 
             JSONArray chaptersArrayJSON = content.getJSONArray("chapters");
@@ -60,6 +67,14 @@ public class StoryLoader {
                 chapter.start = chapterJSON.getInt("start");
                 chapter.end = chapterJSON.getInt("end");
                 chapter.title = chapterJSON.getString("title");
+
+                JSONArray jsonLinks = chapterJSON.getJSONArray("links");
+                chapter.links = new ArrayList<Integer>();
+
+                for (int k=0; k<jsonLinks.length(); k++) {
+                    Log.d("loader","making link " + k +" and " + jsonLinks.get(k));
+                    chapter.links.add((Integer) jsonLinks.get(k));
+                }
 
                 JSONArray captionsJSON = chapterJSON.getJSONArray("captions");
                 chapter.captions = new ArrayList<Chapter.Caption>();

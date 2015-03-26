@@ -8,4 +8,5 @@ import java.util.List;
 public class Story {
     String title;
     List<Chapter> chapters;
+    List<Integer> initialChapters;
 }

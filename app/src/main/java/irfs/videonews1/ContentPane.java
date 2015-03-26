@@ -1,6 +1,8 @@
 package irfs.videonews1;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,11 +14,14 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by tomh on 18/03/15.
@@ -41,6 +46,9 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
     Chapter chapter;
     TextView captionView;
+    LinearLayout exploreDeeperLayout;
+    List<Button> exploreButtons = new ArrayList<Button>();
+    int chapID = 0;
 
     public interface UpdatePercentListener {
         public void updatePercent(float percent);
@@ -48,10 +56,11 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
     UpdatePercentListener mUpdatePercentListener;
 
 
-    public static ContentPane newInstance(int _position, String _uriString, Chapter _chapter) {
+    public static ContentPane newInstance(int _position, String _uriString,  int _chapID, Chapter _chapter) {
         ContentPane contentPane = new ContentPane();
         Bundle args = new Bundle();
         args.putInt("position",_position);
+        args.putInt("chapID",_chapID);
 
         args.putString("uriString", _uriString);
         args.putSerializable("chapter",_chapter);
@@ -73,6 +82,7 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         Log.d("contentpane "+args.getInt("position"),"create");
+        chapID = args.getInt("chapID");
 
 
     }
@@ -87,9 +97,41 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         rootView = (ViewGroup) inflater.inflate(R.layout.content_pane,container,false);
 
         captionView = (TextView) rootView.findViewById(R.id.captionView);
+        exploreDeeperLayout = (LinearLayout) rootView.findViewById(R.id.exploreDeeperLayout);
+
+
+
         chapter = (Chapter) args.getSerializable("chapter");
         captionView.setText(chapter.captions.get(0).body);
 
+        MainActivity a = (MainActivity) getActivity();
+        for (int i = 0; i<chapter.links.size();i++) {
+
+            Button b = new Button(getActivity());
+            //b.setText(chapter.links.get(i));
+
+            int chap = chapter.links.get(i);
+            String storyTitle =   a.getStory().chapters.get(chap).title;
+            b.setText(storyTitle);
+            b.setTag(chap);
+            boolean isPresent = a.getTimelineModel().contains(chap);
+            b.getBackground().setColorFilter(0xFFC80000, PorterDuff.Mode.MULTIPLY);
+            b.setTextColor(Color.WHITE);
+
+            b.setEnabled(!isPresent);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity a = (MainActivity) getActivity();
+                    int chapterToLaunch = (int) v.getTag();
+                    a.addTimelineElement(chapterToLaunch,chapID,true);
+                    v.setEnabled(false);
+                }
+            });
+            exploreButtons.add(b);
+            exploreDeeperLayout.addView(b);
+
+        }
 
         mSurfaceView = (SurfaceView)rootView.findViewById(R.id.videoSurfaceView);
         holder = mSurfaceView.getHolder();
@@ -166,11 +208,16 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         } else if (!isVisibleToUser && m_isVisible) {
             // it transitioned visible -> invisible
             Log.d("contentpane "+args.getInt("position"),"became invisible");
-                    if (mp.isPlaying()) {
 
-                        mp.pause();
-                        mp.seekTo(0);
-                    }
+            try {
+                if (mp.isPlaying()) {
+
+                    mp.pause();
+                    mp.seekTo(0);
+                }
+            } catch (Exception e) {
+
+            }
         }
 
 
@@ -180,6 +227,7 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
 
     }
     @Override
@@ -209,7 +257,8 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
             int i;
             for (i=0;i<chapter.captions.size();i++) {
                 if (pos >= chapter.captions.get(i).start && pos < chapter.captions.get(i).end) {
-                    captionView.setText(mp.isPlaying() +" @ " + mp.getCurrentPosition() + " :" + chapter.captions.get(i).body);
+                    //captionView.setText(mp.isPlaying() +" @ " + mp.getCurrentPosition() + " :" + chapter.captions.get(i).body);
+                    captionView.setText(chapter.captions.get(i).body);
 
                     break;
                 }

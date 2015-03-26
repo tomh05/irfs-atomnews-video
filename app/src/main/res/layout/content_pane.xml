@@ -16,14 +16,26 @@
 
     <TextView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="160dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:text="Caption text for article shown above. Kept short."
         android:id="@+id/captionView"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="20dp"
+        android:paddingTop="10dp"
         android:background="#FFFFFF"
-        android:textSize="24dp" />
+        android:textSize="22dp"
+        android:paddingBottom="10dp" />
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/exploreDeeperLayout"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+    </LinearLayout>
 
 </LinearLayout>
