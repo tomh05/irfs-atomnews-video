@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by tomh on 20/03/15.
@@ -92,6 +94,12 @@ public class StoryLoader {
                 }
 
                 story.chapters.add(chapter);
+            }
+
+            story.extras = new HashMap<String,String>();
+            JSONArray extrasJSON = content.getJSONArray("extras");
+            for (int i=0; i<extrasJSON.length(); i++) {
+                story.extras.put(extrasJSON.getJSONObject(i).getString("name"), extrasJSON.getJSONObject(i).getString("body"));
             }
 
         } catch (JSONException e) {
