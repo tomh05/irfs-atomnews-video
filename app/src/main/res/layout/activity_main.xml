@@ -1,0 +1,76 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="wrap_content"
+    android:layout_height="match_parent" android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp" tools:context=".MainActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Article Title Lorum Ipsum"
+        android:id="@+id/titleTextView" />
+
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/content_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp" />
+
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Explore Deeper"
+        android:id="@+id/exploreDeeper"
+        android:background="#CCCCCC"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="412dp"/>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/timelineScrollView"
+        android:layout_marginTop="32dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/timelineLayout"
+            android:paddingRight="100dp">
+
+            </LinearLayout>
+    </HorizontalScrollView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Added ►"
+        android:id="@+id/addedTimelineIndicator"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="33dp"
+        android:background="#00AA00"
+        android:autoText="true"
+        android:textColor="#ffffffff"
+        android:textSize="18sp"
+        android:paddingLeft="20px"
+        android:paddingTop="19px"
+        android:paddingRight="20px"
+        android:paddingBottom="19px"
+        android:layout_marginRight="0dp"
+        android:alpha="0" />
+
+</RelativeLayout>
