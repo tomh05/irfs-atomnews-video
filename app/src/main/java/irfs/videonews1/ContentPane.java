@@ -51,7 +51,7 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
     Uri videoSource;
 
     Chapter chapter;
-    Button replayButton;
+    Button playButton;
     TextView captionView;
     LinearLayout exploreDeeperLayout;
     List<Button> exploreButtons = new ArrayList<Button>();
@@ -108,21 +108,23 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         exploreDeeperLayout = (LinearLayout) rootView.findViewById(R.id.exploreDeeperLayout);
 
 
-        // Replay button
-        replayButton = (Button) rootView.findViewById(R.id.replayButton);
-        replayButton.setAlpha(0);
-        replayButton.setEnabled(false);
-        replayButton.setOnClickListener(new View.OnClickListener() {
+        // play button
+        playButton = (Button) rootView.findViewById(R.id.playButton);
+        playButton.setAlpha(0);
+        playButton.setEnabled(false);
+        playButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mp.pause();
-                mp.seekTo(0);
+                if (v.getTag() == "replay") {
+                    mp.seekTo(0);
+                }
                 play();
-                replayButton.setEnabled(false);
-                replayButton.setAlpha(0);
+                playButton.setEnabled(false);
 
             }
         });
+
 
         chapter = (Chapter) args.getSerializable("chapter");
         captionView.setText(chapter.captions.get(0).body);
@@ -187,13 +189,16 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                replayButton.setEnabled(true);
-                replayButton.setAlpha(1);
+                playButton.setText("↻");
+                playButton.setTag("replay");
+                playButton.setEnabled(true);
+                playButton.setAlpha(1);
 
             }
         });
 
         try {
+            args.getString("chapID");
             mp.setDataSource(getActivity(), videoSource);
 
             mp.prepareAsync();
@@ -205,6 +210,17 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
             e.printStackTrace();
         }
 
+        /*
+        mSurfaceView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("is","clicked");
+                if (mp.isPlaying()) {
+                    pause();
+                }
+            }
+        });
+        */
 
 
 
@@ -274,15 +290,26 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
     }
 
-    void play() {
+    public void play() {
         if (chapter.hasAudio) {
             mp.setVolume(1, 1);
         } else {
             mp.setVolume(0, 0);
         }
 
+        playButton.setAlpha(0);
+        playButton.setEnabled(false);
         mp.start();
         videoTimerHandler.postDelayed(UpdateCaptions, 100);
+    }
+
+    public void pause() {
+
+        playButton.setText("►");
+        playButton.setTag("play");
+        playButton.setEnabled(true);
+        playButton.setAlpha(1);
+        mp.pause();
     }
 
     private Runnable UpdateCaptions = new Runnable() {
@@ -333,9 +360,9 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
             @Override
             public void onClick(View v) {
                 // Do something
-                mp.pause();
-                Log.d("clicked span", "I was clicked: " + v.toString());
-                Log.d("clicked span", "And span was: " + span.getURL());
+                MainActivity a = (MainActivity) getActivity();
+                pause();
+                a.showOverlay(span.getURL());
             }
         };
 

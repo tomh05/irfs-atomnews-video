@@ -22,11 +22,12 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:text="↻"
-            android:id="@+id/replayButton"
+            android:id="@+id/playButton"
             android:alpha="1"
             android:textSize="90dp"
             android:textColor="#99FFFFFF"
             android:background="#66000000" />
+
     </RelativeLayout>
 
     <TextView

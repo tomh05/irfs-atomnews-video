@@ -28,9 +28,11 @@ public class StoryLoader {
         context = _context;
     }
 
-    public Story loadStoryFromLocalJSON() {
+    public Story loadStoryFromLocalJSON(String articleName) {
 
-    InputStream is = this.context.getResources().openRawResource(R.raw.content);
+        Log.d("this",articleName);
+    int resID = this.context.getResources().getIdentifier("content_"+articleName,"raw",this.context.getPackageName());
+    InputStream is = this.context.getResources().openRawResource(resID);
         byte[] buffer;
         String jsonString = "";
 

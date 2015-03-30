@@ -2,6 +2,7 @@ package irfs.videonews1;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -33,6 +34,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends FragmentActivity implements ContentPane.UpdatePercentListener {
@@ -54,6 +57,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
     private HorizontalScrollView timelineScrollView;
 
 
+    String articleName;
     public Story getStory() {
         return story;
     }
@@ -68,14 +72,21 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+       Intent intent = getIntent();
+       articleName = intent.getStringExtra("name");
+
         Log.d("MainActivity","Loading Story...");
         StoryLoader storyLoader = new StoryLoader(this);
-        story = storyLoader.loadStoryFromLocalJSON();
+        story = storyLoader.loadStoryFromLocalJSON(articleName);
         Log.d("MainActivity","Survived...");
 
+
+        TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
+        titleTextView.setText(story.title);
 
         timelineLayout = (LinearLayout) findViewById(R.id.timelineLayout);
         timelineScrollView = (HorizontalScrollView) findViewById(R.id.timelineScrollView);
@@ -94,6 +105,20 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
 
 
 
+        // home button
+        Button homeButton = (Button) findViewById(R.id.homeButton);
+        homeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goHome();
+            }
+        });
+
+
+    }
+    void goHome() {
+        Intent intent = new Intent(this,StoryChooserActivity.class);
+        startActivity(intent);
     }
 
     ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -131,6 +156,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         position ++;
         if (position <= 0) position = timelineModel.size();
         Log.d("addTimelineElement","chapterID "+chapterID+" after "+afterChapterID);
+        /*
         if (false && animate) {
             //Animation anim = AnimationUtils.loadAnimation(this,R.anim.added_timeline);
             TextView addedView = (TextView) findViewById(R.id.addedTimelineIndicator);
@@ -145,11 +171,10 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
             animSet.play(animOut).after(1000);
             animSet.start();
         }
-
-
+        */
 
         TimelineElement newEl = new TimelineElement(this,chapterID);
-        newEl.setTag(timelineModel.size());
+        newEl.setTag(chapterID);
         newEl.setText(story.chapters.get(chapterID).title);
         newEl.setPercent(0);
         newEl.setActive(false);
@@ -159,8 +184,9 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         newEl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int page = (int) v.getTag();
-                goToPage(page);
+                int chapterID = (int) v.getTag();
+                //goToPage(page);
+                goToChapterID(chapterID);
             }
         });
 
@@ -207,9 +233,13 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
 
         //float scrollLoc = timelineElements.get(i).getX() - 50;
         //timelineScrollView.smoothScrollTo((int) scrollLoc,0);
+    }
 
-
-
+    public void goToChapterID(int id) {
+        int page = timelineModel.indexOf(id);
+        if (page >=0) {
+            goToPage(page);
+        }
     }
 
     @Override
@@ -217,6 +247,29 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         int i = mPager.getCurrentItem();
 
         timelineElements.get(i).setPercent(percent);
+    }
+
+    public void showOverlay(String id) {
+
+        LinearLayout overlayLayout = (LinearLayout) findViewById(R.id.overlayLayout);
+        TextView overlayTitleView = (TextView) findViewById(R.id.overlayTitle);
+        TextView overlayBodyView = (TextView) findViewById(R.id.overlayBody);
+        Button overlayCloseButton = (Button) findViewById(R.id.overlayClose);
+        String overlayBodyText = (String)  story.extras.get(id);
+
+        overlayTitleView.setText(id);
+        overlayBodyView.setText(overlayBodyText);
+
+        overlayCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout overlayLayout = (LinearLayout) findViewById(R.id.overlayLayout);
+                overlayLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        overlayLayout.setVisibility(View.VISIBLE);
+
     }
 
     private class ContentPagerAdapter extends FragmentStatePagerAdapter {
@@ -229,6 +282,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
             int chapID = timelineModel.get(position);
             //Fragment fragment = new ContentPane();
             //Bundle args = new Bundle();
+            /*
             String uri = "";
             if (chapID ==0) {
                 uri = "android.resource://" + getPackageName() + "/" + R.raw.india1;
@@ -254,6 +308,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
             fragment.setUserVisibleHint(true);
             */
 
+            String uri = "android.resource://" + getPackageName() + "/" + getResources().getIdentifier(articleName + chapID,"raw",getPackageName());
             ContentPane contentPane = ContentPane.newInstance(position, uri, chapID, story.chapters.get(chapID));
 
             return contentPane;
@@ -291,5 +346,6 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
 
         return super.onOptionsItemSelected(item);
     }
+
 
 }

@@ -1,34 +1,37 @@
 {"title":"Jeremy Clarkson Suspended from Top Gear",
+"initial_chapters": [0,1,2],
 "chapters": [
-{"start":"0","end":"18","title":"Introduction","captions":[
-    {"start":"0","end":"6","body":"Jeremy Clarkson, the presenter of Top Gear, has been suspended after punching a producer "  }, 
+{"start":"0","end":"18","title":"Introduction","hasAudio":false, "captions":[
+    {"start":"0","end":"6","body":"<A href='Jeremy Clarkson'>Jeremy Clarkson</a>, the presenter of Top Gear, has been suspended after punching a producer "  },
         {"start":"6","end":"13","body":"He was involved in a ‘fracas’ with 36-year-old Oisin Tymon "  }, 
         {"start":"13","end":"18","body":"And the popular show has now been taken off-air"  }
         ],
         "links":[]},
-{"start":"0","end":"18","title":"The 'Fracas'","captions":[
+{"start":"0","end":"18","title":"The 'Fracas'","hasAudio":false, "captions":[
     {"start":"0","end":"6","body":"Clarkson allegedly punched Tymon in a row over food"  }, 
         {"start":"6","end":"13","body":"Witnesses said Clarkson was upset that he wasn’t served steak"  }, 
         {"start":"13","end":"18","body":"He then shouted at Tymon for over 30 minutes before punching him"  }
         ],
         "links":[]},
-{"start":"0","end":"18","title":"Controversies'","captions":[
+{"start":"0","end":"18","title":"Controversies","hasAudio":false, "captions":[
     {"start":"0","end":"6","body":"It’s not the first time Clarkson has been in trouble"  }, 
         {"start":"6","end":"13","body":"He was given a warning last year after apparently using the N-word on screen"  }, 
         {"start":"13","end":"18","body":"He also came under fire for suggesting striking workers “should be shot”"  }
         ],
-        "links":[]},
-{"start":"0","end":"18","title":"The Show'","captions":[
-    {"start":"0","end":"6","body":"The popular show has been taken off-air pending an investigation"  }, 
+        "links":[3,4]},
+{"start":"0","end":"18","title":"The Show","hasAudio":false, "captions":[
+    {"start":"0","end":"6","body":"The <a href='Topgear'>popular show</a> has been taken off-air pending an investigation"  },
         {"start":"6","end":"13","body":"It’s the most watched factual TV programme in the world"  }, 
         {"start":"13","end":"18","body":"And earns the BBC over £150m annually"  }
         ],
         "links":[]},
-{"start":"0","end":"18","title":"Campaigns'","captions":[
+{"start":"0","end":"18","title":"Campaigns","hasAudio":false, "captions":[
     {"start":"0","end":"6","body":"Over a million fans have signed a petition asking for Clarkson to be brought back"  }, 
         {"start":"6","end":"13","body":"It was the fastest-growing online petition on the Change.org site"  }, 
         {"start":"13","end":"18","body":"The petition was delivered to the BBC in a tank"  }
         ],
         "links":[]}
-        ]
+        ],
+"extras":[{"name":"Jeremy Clarkson", "body":"Age: 54 (Born April 11, 1960, in Doncaster)\nOccupation: Journalist and broadcaster\nNicknames: Jezza, JC"},
+{"name":"Topgear", "body":"The show looked quite different when it began in 1977. It started off as a general motoring show, looking at and reviewing the latest cars. It was presented by Angela Rippon, and became one of the BBC’s most watched programmes during the 1980s. After Jeremy Clarkson joined in 1988, the show became edgier and more controversial.\n\nAfter Jeremy Clarkson resigned in Top Gear in 1999, the show suffered and bosses decided to change the format. ‘New Top Gear’, filmed in Dunsfold Aerodrome in Surrey, became an instant hit. Clarkson was soon joined by Richard Hammond and James May, and together the three made Top Gear into a national cultural icon."}]
 }
