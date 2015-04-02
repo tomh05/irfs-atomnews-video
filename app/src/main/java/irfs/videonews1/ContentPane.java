@@ -57,8 +57,13 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
     List<Button> exploreButtons = new ArrayList<Button>();
     int chapID = 0;
 
+
+    public int getChapID() {
+        return chapID;
+    }
+
     public interface UpdatePercentListener {
-        public void updatePercent(float percent);
+        public void updatePercent(int chapID, float percent);
     }
     UpdatePercentListener mUpdatePercentListener;
 
@@ -127,8 +132,8 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
 
         chapter = (Chapter) args.getSerializable("chapter");
-        captionView.setText(chapter.captions.get(0).body);
-
+        //captionView.setText(chapter.captions.get(0).body);
+        setCaptionText(chapter.captions.get(0).body);
 
         MainActivity a = (MainActivity) getActivity();
         for (int i = 0; i<chapter.links.size();i++) {
@@ -209,6 +214,18 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+        Button pauseButton = (Button) rootView.findViewById(R.id.pauseButton);
+        pauseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("is","clicked");
+                if (mp.isPlaying()) {
+                    pause();
+                }
+            }
+        });
 
         /*
         mSurfaceView.setOnClickListener(new View.OnClickListener() {
@@ -318,7 +335,7 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
 
             float percent = 100.0f * (float) mp.getCurrentPosition()/ (float )mp.getDuration();
-            mUpdatePercentListener.updatePercent(percent);
+            mUpdatePercentListener.updatePercent(chapID, percent);
 
             int pos = mp.getCurrentPosition() / 1000;
             int i;

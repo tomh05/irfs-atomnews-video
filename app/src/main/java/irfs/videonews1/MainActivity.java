@@ -191,8 +191,8 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         });
 
         if (animate) {
-            ObjectAnimator anim = ObjectAnimator.ofFloat(newEl,"width",0f,1f);
-            anim.setDuration(1000);
+            ObjectAnimator anim = ObjectAnimator.ofFloat(newEl,"interp",0f,1f);
+            anim.setDuration(2000);
             anim.start();
         } else {
 
@@ -216,23 +216,13 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         if (mPager.getCurrentItem() == 0) {
             super.onBackPressed();
         } else {
-            //mPager.setCurrentItem(mPager.getCurrentItem()-1,true);
             goToPage(mPager.getCurrentItem()-1);
         }
     }
 
     public void goToPage(int i)
     {
-        //int oldEl = mPager.getCurrentItem();
-        //timelineElements.get(oldEl).setPercent(0);
-        //timelineElements.get(oldEl).setActive(false);
-
         mPager.setCurrentItem(i);
-
-        //timelineElements.get(i).setActive(true);
-
-        //float scrollLoc = timelineElements.get(i).getX() - 50;
-        //timelineScrollView.smoothScrollTo((int) scrollLoc,0);
     }
 
     public void goToChapterID(int id) {
@@ -243,10 +233,13 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
     }
 
     @Override
-    public void updatePercent(float percent) {
-        int i = mPager.getCurrentItem();
+    public void updatePercent(int chapID, float percent) {
+        //int i = mPager.getCurrentItem();
 
-        timelineElements.get(i).setPercent(percent);
+        int i = timelineModel.indexOf(chapID);
+        if (i >= 0) {
+            timelineElements.get(i).setPercent(percent);
+        }
     }
 
     public void showOverlay(String id) {
@@ -321,7 +314,17 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
 
         @Override
         public int getItemPosition(Object object) {
-            return PagerAdapter.POSITION_NONE;
+            // We only wnat items to be refreshed if needed - i.e. they're to the right of the current item
+            ContentPane f = (ContentPane) object;
+            int chapID = f.getChapID();
+
+            int position = timelineModel.indexOf(chapID);
+            if (position > mPager.getCurrentItem()) {
+                return PagerAdapter.POSITION_NONE;
+            } else {
+
+                return PagerAdapter.POSITION_UNCHANGED;
+            }
         }
     }
 

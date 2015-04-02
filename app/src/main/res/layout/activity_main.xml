@@ -10,7 +10,7 @@
         android:layout_height="40dp"
         android:text="◄"
         android:id="@+id/homeButton"
-        android:background="#fff" />
+        android:background="#3FFF" />
 
     <LinearLayout
         android:orientation="horizontal"

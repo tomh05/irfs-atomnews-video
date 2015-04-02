@@ -12,10 +12,10 @@
     {"start":"7","end":"13","body":"Once on board, she was gang-raped by six men"},
     {"start":"13","end":"21","body":"She later died of her injuries in a hospital in Singapore"}
     ], 
-    "links":[3,6]},
+    "links":[3]},
 {"start":"41","end":"59","title":"The Victim","hasAudio":false, "captions":[
     {"start":"0","end":"6","body":"<a href='Nirbhaya'>Jyoti Singh</a> was a 23-year old medical student"  },
-    {"start":"6","end":"13","body":"She came to be known across India as Nirbhaya.."  }, 
+    {"start":"6","end":"13","body":"She came to be known across India as Nirbhaya..."  },
     {"start":"13","end":"18","body":"A Hindi word meaning “fearless”"  }
     ], 
     "links":[4]},
@@ -24,13 +24,13 @@
     {"start":"6","end":"13","body":"They are Mukesh Singh, Vinay Sharma, Pawan Gupta and Akshay Thakur"}, 
     {"start":"13","end":"20","body":"One of the men was interviewed from his prison in the documentary"}
     ], 
-    "links":[]},
+    "links":[6]},
     {"start":"81","end":"100","title":"The Documentary","hasAudio":false, "captions":[
     {"start":"0","end":"7","body":"Filmmaker <a href='Leslee Udwin'>Leslee Udwin</a> called the documentary “<a href='India’s Daughter'>India’s Daughter</a>”"  },
     {"start":"7","end":"14","body":"She has pleaded for the film to be released in India"  }, 
     {"start":"14","end":"19","body":"And has called on government officials to watch the film before condemning it"  }
     ], 
-    "links":[5]},
+    "links":[5,7]},
 {"start":"101","end":"120","title":"Women in India","hasAudio":false, "captions":[
     {"start":"0","end":"7","body":"The documentary has been hugely controversial inside India"  }, 
     {"start":"7","end":"13","body":"Women’s groups say the rapists views <a href='Violence against Women in India'>are shared widely</a>"  },
@@ -38,6 +38,10 @@
     ], 
     "links":[]},
 {"start":"121","end":"148","title":"Rapist Interview","hasAudio":true, "captions":[
+    {"start":"0","end":"27","body":"(This clip contains audio)"  }
+    ], 
+    "links":[]},
+{"start":"0","end":"0","title":"Vox Pops","hasAudio":true, "captions":[
     {"start":"0","end":"27","body":"(This clip contains audio)"  }
     ], 
     "links":[]}

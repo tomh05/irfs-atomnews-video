@@ -17,7 +17,15 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:id="@+id/videoSurfaceView"/>
-
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:text=""
+            android:id="@+id/pauseButton"
+            android:alpha="1"
+            android:textSize="90dp"
+            android:textColor="#FFFFFFFF"
+            android:background="#00000000" />
         <Button
             android:layout_width="match_parent"
             android:layout_height="200dp"
@@ -41,7 +49,8 @@
         android:paddingTop="10dp"
         android:background="#FFFFFF"
         android:textSize="22dp"
-        android:paddingBottom="10dp" />
+        android:paddingBottom="10dp"
+        android:textColorLink="#CC0000" />
 
 
     <LinearLayout

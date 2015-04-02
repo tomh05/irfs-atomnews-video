@@ -21,8 +21,11 @@ public class TimelineElement extends RelativeLayout {
     boolean mActive = true;
     Paint paint = new Paint();
     float width = 0;
+    float interp = 0;
     TextView textView;
     float textWidth = 0f;
+
+    int backgroundColor = Color.rgb(200,100,100);
 
 
     public TimelineElement (final Context context, int position) {
@@ -51,8 +54,7 @@ public class TimelineElement extends RelativeLayout {
     }
 
     // This is a messy workaround - we don't know what the final size of the textview should be...
-    public void setWidth(float _width) {
-        Log.d("timeel","my width is " + _width + " of " + textView.getMeasuredWidth() + "wid" + textView.getWidth());
+    public void setInterp(float _interp) {
         //this.width = width;
         //setMeasuredDimension((int) ((float) getMeasuredWidth()* width),getMeasuredHeight());
         //width = getWidth() * _width;
@@ -60,7 +62,21 @@ public class TimelineElement extends RelativeLayout {
         //if (textView.getWidth() > fullTextWidth) fullTextWidth = textView.getWidth();
         //Log.d("timeel","measured width"+fullTextWidth);
         //textView.setWidth((int) (fullTextWidth*_width) );
-        textView.setWidth((int) (textWidth*_width) );
+
+        float widthInterp = _interp/0.3f;
+        if (widthInterp>1f) widthInterp = 1f;
+        int newWidth = (int) (textWidth * (widthInterp));
+        textView.setWidth(newWidth);
+
+        // morph color
+        // 0    200 0
+        // 200, 100 100
+        float colorInterp = (_interp - 0.9f) / 0.1f;
+        if (colorInterp<0) colorInterp=0;
+        int r = (int) (200f * colorInterp);
+        int g = 200 - (int) (100 * colorInterp);
+        int b = (int) (100f * colorInterp);
+        backgroundColor = Color.rgb(r,g,b);
         //rebuildPath();
     }
 
@@ -131,10 +147,12 @@ public class TimelineElement extends RelativeLayout {
         canvas.clipPath(bubblePath);
 
 
-        canvas.drawColor(Color.rgb(200,100,100));
+        //canvas.drawColor(Color.rgb(200,100,100));
+        canvas.drawColor(backgroundColor);
 
         paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.rgb(200, 0, 0));
+        //paint.setColor(Color.rgb(200, 0, 0));
+        paint.setColor(Color.rgb(200,0,0));
         float barwidth = width * (mPercent / 100.0f);
         canvas.drawRect(0,0,barwidth,getHeight(),paint);
 
