@@ -148,7 +148,7 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
             boolean isPresent = a.getTimelineModel().contains(chap);
             b.getBackground().setColorFilter(0xFFC80000, PorterDuff.Mode.MULTIPLY);
             b.setTextColor(Color.WHITE);
-
+            b.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             b.setEnabled(!isPresent);
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -161,8 +161,14 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
             });
             exploreButtons.add(b);
             exploreDeeperLayout.addView(b);
+            // only show explore deeper if buttons are present
 
+            TextView exploreDeeperHeader = (TextView)rootView.findViewById(R.id.exploreDeeperHeader);
+            if (exploreDeeperHeader != null) {
+                exploreDeeperHeader.setVisibility(View.VISIBLE);
+            }
         }
+
 
         mSurfaceView = (SurfaceView)rootView.findViewById(R.id.videoSurfaceView);
         holder = mSurfaceView.getHolder();
@@ -198,7 +204,9 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
                 playButton.setTag("replay");
                 playButton.setEnabled(true);
                 playButton.setAlpha(1);
-
+                MainActivity a = (MainActivity) getActivity();
+                a.notifyPaused();
+                exploreDeeperLayout.setVisibility(View.VISIBLE);
             }
         });
 
@@ -316,8 +324,17 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
         playButton.setAlpha(0);
         playButton.setEnabled(false);
+
+
         mp.start();
         videoTimerHandler.postDelayed(UpdateCaptions, 100);
+        MainActivity a = (MainActivity) getActivity();
+        a.notifyPlaying();
+
+        if (!a.portrait) {
+            exploreDeeperLayout.setVisibility(View.INVISIBLE);
+        }
+
     }
 
     public void pause() {
@@ -327,6 +344,12 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         playButton.setEnabled(true);
         playButton.setAlpha(1);
         mp.pause();
+
+        MainActivity a = (MainActivity) getActivity();
+        a.notifyPaused();
+        if (!a.portrait) {
+            exploreDeeperLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     private Runnable UpdateCaptions = new Runnable() {

@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Region;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -20,17 +21,15 @@ public class TimelineElement extends RelativeLayout {
     Path bubblePath = new Path();
     boolean mActive = true;
     Paint paint = new Paint();
-    float width = 0;
-    float interp = 0;
     TextView textView;
     float textWidth = 0f;
 
     int backgroundColor = Color.rgb(200,100,100);
 
-
     public TimelineElement (final Context context, int position) {
         super(context);
 
+        setLayerType(View.LAYER_TYPE_SOFTWARE,null);
         setWillNotDraw(false);
 
         textView = new TextView(context);
@@ -43,13 +42,9 @@ public class TimelineElement extends RelativeLayout {
         textView.setTextSize(18);
         textView.setSingleLine();
 
-
         //button.setTag(position);
 
         this.addView(textView);
-
-
-        Log.d("timelinebutton", "creating path");
 
     }
 
@@ -82,13 +77,11 @@ public class TimelineElement extends RelativeLayout {
 
     public TimelineElement (Context context, AttributeSet attrs) {
         super(context, attrs);
-        Log.d("timelinebutton", "creating path 2");
 
     }
 
     public TimelineElement (Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        Log.d("timelinebutton", "creating path 3");
 
     }
 
@@ -115,7 +108,7 @@ public class TimelineElement extends RelativeLayout {
     @Override
     protected void onSizeChanged(int w,int h,int oldw,int oldh) {
         super.onSizeChanged(w,h,oldw,oldh);
-        width = w;
+        //width = w;
 
         rebuildPath();
 
@@ -141,28 +134,35 @@ public class TimelineElement extends RelativeLayout {
 
     }
     @Override
-    public void draw(Canvas canvas) {
+    public void onDraw(Canvas canvas) {
 
+        super.onDraw(canvas);
+
+        //getAlpha();
         canvas.save();
+        paint.setColor(Color.BLUE);
+        canvas.drawRect(0,0,canvas.getWidth(),80,paint);
+        //canvas.clipPath(bubblePath, Region.Op.UNION); // doesnt clip anything
+        //canvas.clipPath(bubblePath, Region.Op.INTERSECT); // makes top dissapear
+        //canvas.clipPath(bubblePath, Region.Op.REVERSE_DIFFERENCE); // draws no background
+        //canvas.clipPath(bubblePath, Region.Op.XOR); // draws top and bottom but not middle bit. Once faded, only draws outside
+        //canvas.clipPath(bubblePath, Region.Op.REPLACE); // makes top dissapear
+        //canvas.clipPath(bubblePath, Region.Op.DIFFERENCE); //draws top and bottom but not middle. Once faded, only draws bottom
         canvas.clipPath(bubblePath);
-
 
         //canvas.drawColor(Color.rgb(200,100,100));
         canvas.drawColor(backgroundColor);
 
         paint.setStyle(Paint.Style.FILL);
         //paint.setColor(Color.rgb(200, 0, 0));
-        paint.setColor(Color.rgb(200,0,0));
-        float barwidth = width * (mPercent / 100.0f);
+        paint.setColor(Color.rgb(200, 0, 0));
+        float barwidth = getWidth() * (mPercent / 100.0f);
         canvas.drawRect(0,0,barwidth,getHeight(),paint);
 
         paint.setStyle(Paint.Style.STROKE);
         paint.setColor(Color.WHITE);
         paint.setStrokeWidth(5);
         canvas.drawPath(bubblePath,paint);
-
-
-        super.draw(canvas);
 
         canvas.restore();
 
@@ -172,6 +172,7 @@ public class TimelineElement extends RelativeLayout {
     protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec,heightMeasureSpec);
         setMeasuredDimension(getMeasuredWidth(),getMeasuredHeight());
+        //setMeasuredDimension(300,200);
     }
 
 }

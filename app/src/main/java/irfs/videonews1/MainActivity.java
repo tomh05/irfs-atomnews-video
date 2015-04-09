@@ -3,6 +3,9 @@ package irfs.videonews1;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -12,9 +15,11 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -66,12 +71,20 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
     }
 
 
+    public final static int HIDDEN = 0;
+    public final static int VISIBLE = 1;
+    public final static int WAITING = 2;
+    int timelineState = VISIBLE;
+    final Handler timelineAnimationHandler = new Handler();
+
+    public boolean portrait;
     private Story story;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        portrait = (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -85,17 +98,28 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         Log.d("MainActivity","Survived...");
 
 
-        TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
-        titleTextView.setText(story.title);
+        if (portrait) {
+            TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
+            titleTextView.setText(story.title);
+        }
 
         timelineLayout = (LinearLayout) findViewById(R.id.timelineLayout);
         timelineScrollView = (HorizontalScrollView) findViewById(R.id.timelineScrollView);
 
-        //populate timeline
-        for (int k = 0; k < story.initialChapters.size(); k++) {
-            addTimelineElement(story.initialChapters.get(k),-1,false);
+        // Reload timeline from model if there is one
+        if (savedInstanceState != null) {
+        ArrayList<Integer> savedTimelineModel =  savedInstanceState.getIntegerArrayList("timelineModel");
+            for (int k = 0; k < savedTimelineModel.size(); k++) {
+                addTimelineElement(savedTimelineModel.get(k), -1, false);
+            }
+            timelineElements.get(0).setActive(true);
+        } else {
+            //populate timeline
+            for (int k = 0; k < story.initialChapters.size(); k++) {
+                addTimelineElement(story.initialChapters.get(k), -1, false);
+            }
+            timelineElements.get(0).setActive(true);
         }
-        timelineElements.get(0).setActive(true);
 
 
         mPager = (ViewPager) findViewById(R.id.content_pager);
@@ -105,6 +129,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
 
 
 
+        if (portrait) {
         // home button
         Button homeButton = (Button) findViewById(R.id.homeButton);
         homeButton.setOnClickListener(new View.OnClickListener() {
@@ -114,8 +139,20 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
             }
         });
 
+        } else {
+            //hideTimeline();
+        }
 
     }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        super.onSaveInstanceState(outState);
+        outState.putIntegerArrayList("timelineModel",timelineModel);
+    }
+
     void goHome() {
         Intent intent = new Intent(this,StoryChooserActivity.class);
         startActivity(intent);
@@ -127,6 +164,18 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
 
             //Log.d("scroller","page scrolled pos "+position+",offset "+positionOffset + ", px "+positionOffsetPixels);
             // check we moved to a different page
+
+            if (!portrait) {
+                if (positionOffset ==0.0) {
+                    //hideTimeline();
+                } else {
+                    if (timelineState == HIDDEN) animateTimelineDown();
+                    if (timelineState == WAITING) {
+                        animateTimelineDown();
+                    }
+                    //showTimeline();
+                }
+            }
             if (lastPosition != position && positionOffset==0.0) {
 
                 timelineElements.get(lastPosition).setActive(false);
@@ -156,22 +205,6 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         position ++;
         if (position <= 0) position = timelineModel.size();
         Log.d("addTimelineElement","chapterID "+chapterID+" after "+afterChapterID);
-        /*
-        if (false && animate) {
-            //Animation anim = AnimationUtils.loadAnimation(this,R.anim.added_timeline);
-            TextView addedView = (TextView) findViewById(R.id.addedTimelineIndicator);
-            //ObjectAnimator anim = ObjectAnimator.ofFloat(addedView,"layout_marginRight",-100f,0f);
-            ObjectAnimator animIn = ObjectAnimator.ofFloat(addedView,"alpha",0f,1f);
-            animIn.setDuration(500);
-            ObjectAnimator animOut = ObjectAnimator.ofFloat(addedView,"alpha",1f,0f);
-            animOut.setDuration(500);
-            //animOut.start();
-            AnimatorSet animSet = new AnimatorSet();
-            animSet.play(animIn).before(animOut);
-            animSet.play(animOut).after(1000);
-            animSet.start();
-        }
-        */
 
         TimelineElement newEl = new TimelineElement(this,chapterID);
         newEl.setTag(chapterID);
@@ -179,7 +212,6 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         newEl.setPercent(0);
         newEl.setActive(false);
         newEl.setClickable(true);
-
 
         newEl.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,6 +226,10 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
             ObjectAnimator anim = ObjectAnimator.ofFloat(newEl,"interp",0f,1f);
             anim.setDuration(2000);
             anim.start();
+            if (!portrait) {
+                if (timelineState == HIDDEN) { animateTimelineDown(); }
+                if (timelineState == WAITING) { animateTimelineDown(); }
+            }
         } else {
 
         }
@@ -239,6 +275,12 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         int i = timelineModel.indexOf(chapID);
         if (i >= 0) {
             timelineElements.get(i).setPercent(percent);
+        }
+
+        if (!portrait) {
+            if (timelineState == VISIBLE) {
+                startTimelineTimeout();
+            }
         }
     }
 
@@ -349,6 +391,124 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
 
         return super.onOptionsItemSelected(item);
     }
+    private void showTimeline() {
+        if (timelineState == WAITING) {
+            // cancel timer
+            timelineAnimationHandler.removeCallbacksAndMessages(null);
+        }
+        if (timelineState == HIDDEN) {
+            animateTimelineDown();
+        }
+        if (timelineState == VISIBLE) {
+            timelineAnimationHandler.removeCallbacksAndMessages(null);
+        }
+    }
+    private void hideTimeline() {
+
+        if (timelineState == VISIBLE) {
+            // start timer
+            timelineAnimationHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (!portrait) {
+                        animateTimelineUp();
+                    }
+                }
+            }, 3000);
+        }
+
+    }
 
 
+    void animateTimelineDown() {
+
+        timelineAnimationHandler.removeCallbacksAndMessages(null);
+        //final int start = ((ViewGroup.MarginLayoutParams) timelineScrollView.getLayoutParams()).topMargin;
+        //final int end = 0; // hack - see -120 below
+        final float startAlpha = timelineLayout.getAlpha();
+        final float endAlpha = 1f;
+            Animation a = new Animation() {
+                @Override
+                protected void applyTransformation(float interpolatedTime, Transformation t) {
+                    ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) timelineScrollView.getLayoutParams();
+                    //params.topMargin = (int) (start * (1f-interpolatedTime) + end * interpolatedTime ) ;
+                    timelineLayout.setAlpha(startAlpha*(1f-interpolatedTime)+endAlpha*interpolatedTime);
+                    //timelineScrollView.setLayoutParams(params);
+                }
+            };
+        a.setDuration(300);
+        a.setAnimationListener(new Animation.AnimationListener(){
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    timelineState = VISIBLE;
+                }
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+            //a.cancel();
+            timelineScrollView.startAnimation(a);
+    }
+
+    void animateTimelineUp() {
+
+        timelineAnimationHandler.removeCallbacksAndMessages(null);
+        //final int start = ((ViewGroup.MarginLayoutParams) timelineScrollView.getLayoutParams()).topMargin;
+        //final int end = -140; // hack - see -120 below
+        final float startAlpha = timelineLayout.getAlpha();
+        final float endAlpha = 0f;
+            Animation a = new Animation() {
+                @Override
+                protected void applyTransformation(float interpolatedTime, Transformation t) {
+                    //ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) timelineScrollView.getLayoutParams();
+                    timelineLayout.setAlpha(startAlpha*(1f-interpolatedTime)+endAlpha*interpolatedTime);
+                    //params.topMargin = (int) (start * (1f-interpolatedTime) + end * interpolatedTime ) ;
+
+                    //timelineScrollView.setLayoutParams(params);
+                }
+            };
+            a.setDuration(1000);
+            timelineScrollView.startAnimation(a);
+            a.setAnimationListener(new Animation.AnimationListener(){
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    timelineState = HIDDEN;
+                }
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+            });
+    }
+
+    void startTimelineTimeout() {
+        timelineState = WAITING;
+        timelineAnimationHandler.postDelayed(new Runnable() {
+            @Override
+                public void run() {
+                    animateTimelineUp();
+            }
+        }, 3000);
+    }
+    public void notifyPaused() {
+       if (!portrait) {
+           if (timelineState == HIDDEN) animateTimelineDown();
+           if (timelineState == WAITING) animateTimelineDown();
+           //showTimeline();
+
+       }
+    }
+    public void notifyPlaying() {
+        if (!portrait) {
+            //hideTimeline();
+            if (timelineState == VISIBLE) startTimelineTimeout();
+            //if (timelineState == WAITING) animateTimelineUp();
+        }
+    }
 }
+
