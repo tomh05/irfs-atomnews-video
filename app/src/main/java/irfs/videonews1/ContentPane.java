@@ -44,6 +44,8 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
     private SurfaceHolder holder;
     boolean m_isVisible = false;
     int currentCaptionIndex = -1;
+    boolean seeking = false;
+    boolean timeSlip = false; // make captions not align to video, when seeking jumps to wrong place
 
     private Handler videoTimerHandler = new Handler();
 
@@ -52,10 +54,14 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
     Chapter chapter;
     Button playButton;
+    Button nextCaptionButton, prevCaptionButton;
     TextView captionView;
     LinearLayout exploreDeeperLayout;
     List<Button> exploreButtons = new ArrayList<Button>();
     int chapID = 0;
+    VideoProgressBar videoProgressBar;
+
+    MainActivity parentActivity;
 
 
     public int getChapID() {
@@ -75,9 +81,8 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         args.putInt("chapID",_chapID);
 
         args.putString("uriString", _uriString);
-        args.putSerializable("chapter",_chapter);
+        args.putSerializable("chapter", _chapter);
         contentPane.setArguments(args);
-        Log.d("newInstance", "set args" + _position);
         return contentPane;
     }
 
@@ -93,7 +98,6 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
-        Log.d("contentpane "+args.getInt("position"),"create");
         chapID = args.getInt("chapID");
 
 
@@ -103,9 +107,11 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         super.onCreateView(inflater, container, savedInstanceState);
         Bundle args = getArguments();
 
-        Log.d("contentpane "+args.getInt("position"),"create view ");
 
         rootView = (ViewGroup) inflater.inflate(R.layout.content_pane,container,false);
+
+
+        parentActivity = (MainActivity) getActivity();
 
         captionView = (TextView) rootView.findViewById(R.id.captionView);
         captionView.setMovementMethod(LinkMovementMethod.getInstance()); //make links clickable
@@ -135,17 +141,16 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         //captionView.setText(chapter.captions.get(0).body);
         setCaptionText(chapter.captions.get(0).body);
 
-        MainActivity a = (MainActivity) getActivity();
         for (int i = 0; i<chapter.links.size();i++) {
 
             Button b = new Button(getActivity());
             //b.setText(chapter.links.get(i));
 
             int chap = chapter.links.get(i);
-            String storyTitle =   a.getStory().chapters.get(chap).title;
+            String storyTitle =   parentActivity.getStory().chapters.get(chap).title;
             b.setText(storyTitle);
             b.setTag(chap);
-            boolean isPresent = a.getTimelineModel().contains(chap);
+            boolean isPresent = parentActivity.getTimelineModel().contains(chap);
             b.getBackground().setColorFilter(0xFFC80000, PorterDuff.Mode.MULTIPLY);
             b.setTextColor(Color.WHITE);
             b.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -153,9 +158,8 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    MainActivity a = (MainActivity) getActivity();
                     int chapterToLaunch = (int) v.getTag();
-                    a.addTimelineElement(chapterToLaunch,chapID,true);
+                    parentActivity.addTimelineElement(chapterToLaunch,chapID,true);
                     v.setEnabled(false);
                 }
             });
@@ -181,7 +185,6 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
-                Log.d("contentpane ","prepared");
                 if (m_isVisible) {
                     play();
                 }
@@ -193,6 +196,7 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
             @Override
             public void onSeekComplete(MediaPlayer mp) {
                 Log.d("MPlayer", "I just got asked to seek to " + mp.getCurrentPosition());
+                seeking=false;
 
             }
         });
@@ -204,8 +208,7 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
                 playButton.setTag("replay");
                 playButton.setEnabled(true);
                 playButton.setAlpha(1);
-                MainActivity a = (MainActivity) getActivity();
-                a.notifyPaused();
+                parentActivity.notifyPaused();
                 exploreDeeperLayout.setVisibility(View.VISIBLE);
             }
         });
@@ -235,33 +238,69 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
             }
         });
 
-        /*
-        mSurfaceView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("is","clicked");
-                if (mp.isPlaying()) {
-                    pause();
+
+
+        //set up caption skip buttons
+        if (!parentActivity.portrait) {
+            nextCaptionButton = (Button) rootView.findViewById(R.id.nextCaption);
+            nextCaptionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   if (currentCaptionIndex < chapter.captions.size()-1) {
+                       // go to next caption
+
+                       goToCaption(currentCaptionIndex + 1);
+                   }
                 }
-            }
-        });
-        */
+            });
+            prevCaptionButton = (Button) rootView.findViewById(R.id.prevCaption);
+            prevCaptionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (currentCaptionIndex > 0) {
+                        // go to previous caption
+                        goToCaption(currentCaptionIndex - 1);
+                    }
+                }
+            });
+        }
+
+        //set up video progress bar
+        if (!parentActivity.portrait) {
+            videoProgressBar = (VideoProgressBar) rootView.findViewById(R.id.videoProgressBar);
+            int[] positions = new int[chapter.captions.size()];
+            for (int i =0;i<positions.length;i++) positions[i] = chapter.captions.get(i).start;
+            videoProgressBar.setCaptionPositions(positions);
+        }
 
 
-
-
-        /*
-        mediaControls = new MediaController(getActivity());
-        mainVideo = (VideoView) rootView.findViewById(R.id.mainVideo);
-        mainVideo.setMediaController(mediaControls);
-        mainVideo.setVideoURI(Uri.parse(args.getString("uri")));
-        //mainVideo.requestFocus();
-        //mainVideo.start();
-        Log.d("ContentPane","creating page "+args.getInt("position"));
-        */
         return rootView;
     }
 
+    private void goToCaption(int index) {
+        //stop stupid values
+        if (index ==currentCaptionIndex || index > chapter.captions.size() - 1 || index < 0) {
+            return;
+        }
+        Log.d("caption","going from index " + currentCaptionIndex+ " to "+ index);
+        int captionTime = chapter.captions.get(index).start;
+
+        if (mp!=null) {
+            //currentCaptionIndex = index;
+
+            mp.seekTo(captionTime);
+            seeking = true;
+            timeSlip=true;
+            currentCaptionIndex = index;
+            calculatePercent();
+            updateCaptionButtons();
+            setCaptionText(chapter.captions.get(index).body);
+            //videoTimerHandler.removeCallbacksAndMessages(null);
+            //videoTimerHandler.post(UpdateCaptions);
+
+        }
+
+    }
     private void captionTimeout() {
 
     }
@@ -273,7 +312,6 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
         if (isVisibleToUser && ! m_isVisible) {
             // it transitioned invisible -> visible
-            Log.d("contentpane "+args.getInt("position"),"became visible");
 
             if (mp != null) {
                 play();
@@ -281,7 +319,6 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
         } else if (!isVisibleToUser && m_isVisible) {
             // it transitioned visible -> invisible
-            Log.d("contentpane "+args.getInt("position"),"became invisible");
 
             try {
                 if (mp.isPlaying()) {
@@ -328,10 +365,9 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
         mp.start();
         videoTimerHandler.postDelayed(UpdateCaptions, 100);
-        MainActivity a = (MainActivity) getActivity();
-        a.notifyPlaying();
+        parentActivity.notifyPlaying();
 
-        if (!a.portrait) {
+        if (!parentActivity.portrait) {
             exploreDeeperLayout.setVisibility(View.INVISIBLE);
         }
 
@@ -345,9 +381,8 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         playButton.setAlpha(1);
         mp.pause();
 
-        MainActivity a = (MainActivity) getActivity();
-        a.notifyPaused();
-        if (!a.portrait) {
+        parentActivity.notifyPaused();
+        if (!parentActivity.portrait) {
             exploreDeeperLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -356,30 +391,73 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         @Override
         public void run() {
 
+            calculatePercent();
 
-            float percent = 100.0f * (float) mp.getCurrentPosition()/ (float )mp.getDuration();
-            mUpdatePercentListener.updatePercent(chapID, percent);
+            int pos = mp.getCurrentPosition();
+            //Log.d("caption","updatecaptions, pos is "+pos);
 
-            int pos = mp.getCurrentPosition() / 1000;
-            int i;
-            for (i=0;i<chapter.captions.size();i++) {
-                if (pos >= chapter.captions.get(i).start && pos < chapter.captions.get(i).end) {
-                    //captionView.setText(mp.isPlaying() +" @ " + mp.getCurrentPosition() + " :" + chapter.captions.get(i).body);
-                    //captionView.setText(chapter.captions.get(i).body);
+            // don't update the captions if we're still seeking and haven't got to the right point
+            // in the video. (This is a workaround because the video usually seeks a little before
+            // where you tell it to seek to, making the wrong caption appear)
+            if (timeSlip && !seeking && pos >= chapter.captions.get(currentCaptionIndex).start ) {
+                timeSlip = false;
+            }
 
-                    if (i != currentCaptionIndex) {
-                        setCaptionText(chapter.captions.get(i).body);
-                        currentCaptionIndex = i;
+            if (!timeSlip) {
+
+                int i;
+                for (i = 0; i < chapter.captions.size(); i++) {
+                    if (pos >= chapter.captions.get(i).start && pos < chapter.captions.get(i).end) {
+
+                        if (i != currentCaptionIndex) {
+                            //Log.d("caption", "I picked index " + i + ", as pos inbetween " + chapter.captions.get(i).start + " and " + chapter.captions.get(i).end);
+
+                            currentCaptionIndex = i;
+                            setCaptionText(chapter.captions.get(i).body);
+                            updateCaptionButtons();
+                        }
+
+                        break;
                     }
-
-                    break;
                 }
             }
+
             if (mp.isPlaying()) {
                 videoTimerHandler.postDelayed(this, 100);
             }
         }
     };
+
+    private void calculatePercent() {
+        float percent = 100.0f * (float) mp.getCurrentPosition()/ (float )mp.getDuration();
+        mUpdatePercentListener.updatePercent(chapID, percent);
+
+        if (!parentActivity.portrait) {
+            videoProgressBar = (VideoProgressBar) rootView.findViewById(R.id.videoProgressBar);
+            videoProgressBar.setDuration(mp.getDuration());
+            videoProgressBar.setPosition(mp.getCurrentPosition());
+
+        }
+    }
+
+    private void updateCaptionButtons() {
+
+
+        if (!parentActivity.portrait) {
+            if (currentCaptionIndex > 0) {
+                prevCaptionButton.setText("<");
+            } else {
+                prevCaptionButton.setText("");
+            }
+
+            if (currentCaptionIndex < chapter.captions.size() - 1) {
+                nextCaptionButton.setText(">");
+            } else {
+                nextCaptionButton.setText("");
+            }
+
+        }
+    }
 
     // creates hyperlinks in text
     private void setCaptionText(String body) {
@@ -400,9 +478,8 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
             @Override
             public void onClick(View v) {
                 // Do something
-                MainActivity a = (MainActivity) getActivity();
                 pause();
-                a.showOverlay(span.getURL());
+                parentActivity.showOverlay(span.getURL());
             }
         };
 
@@ -414,8 +491,6 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
     @Override
     public void onDestroyView() {
-        Bundle args = getArguments();
-        Log.d("ContentPane","destroying page "+args.getInt("position"));
 
         videoTimerHandler.removeCallbacksAndMessages(null);
         mp.release();

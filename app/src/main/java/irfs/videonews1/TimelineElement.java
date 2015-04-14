@@ -28,23 +28,7 @@ public class TimelineElement extends RelativeLayout {
 
     public TimelineElement (final Context context, int position) {
         super(context);
-
-        setLayerType(View.LAYER_TYPE_SOFTWARE,null);
-        setWillNotDraw(false);
-
-        textView = new TextView(context);
-        textView.setText("");
-        textView.setVisibility(View.VISIBLE);
-        textView.setBackgroundColor(Color.TRANSPARENT);
-        //textView.setHeight(120);
-        textView.setPadding(20,20,20,40); //extra space at bottom for arrow.
-        textView.setTextColor(Color.WHITE);
-        textView.setTextSize(18);
-        textView.setSingleLine();
-
-        //button.setTag(position);
-
-        this.addView(textView);
+        init(context);
 
     }
 
@@ -77,12 +61,34 @@ public class TimelineElement extends RelativeLayout {
 
     public TimelineElement (Context context, AttributeSet attrs) {
         super(context, attrs);
+        init(context);
 
     }
 
     public TimelineElement (Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init(context);
 
+    }
+
+    protected void init(Context context) {
+
+        setLayerType(View.LAYER_TYPE_SOFTWARE,null);
+        setWillNotDraw(false);
+
+        textView = new TextView(context);
+        textView.setText("");
+        textView.setVisibility(View.VISIBLE);
+        textView.setBackgroundColor(Color.TRANSPARENT);
+        //textView.setHeight(120);
+        textView.setPadding(20,20,20,40); //extra space at bottom for arrow.
+        textView.setTextColor(Color.WHITE);
+        textView.setTextSize(18);
+        textView.setSingleLine();
+
+        //button.setTag(position);
+
+        this.addView(textView);
     }
 
     public void setText(String _text) {

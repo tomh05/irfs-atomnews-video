@@ -35,21 +35,60 @@
 
     </RelativeLayout>
 
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="100dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Caption text for article shown above. Kept short."
-            android:id="@+id/captionView"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="10dp"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="fill_parent"
+            android:text="&lt;"
+            android:id="@+id/prevCaption"
+            android:layout_alignTop="@+id/exploreDeeperLayout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textColor="#DDD"
+            android:background="#99000000" />
+
+        <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text="Caption text for article shown above. Kept short."
+                android:id="@+id/captionView"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:background="#99000000"
+                android:textSize="22dp"
+                android:paddingBottom="10dp"
+                android:textColorLink="#CC6666"
+            android:textColor="#DDD"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="fill_parent"
+            android:text="&gt;"
+            android:id="@+id/nextCaption"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="true"
+            android:textColor="#DDD"
+            android:layout_alignParentRight="true"
             android:background="#99000000"
-            android:textSize="22dp"
-            android:paddingBottom="10dp"
-            android:textColorLink="#CC6666"
-            android:layout_marginTop="250dp"
-            android:textColor="#DDD" />
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+    <view
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        class="irfs.videonews1.VideoProgressBar"
+        android:id="@+id/videoProgressBar"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-2dp" />
 
     <LinearLayout
             android:orientation="vertical"
@@ -74,6 +113,7 @@
             android:id="@+id/exploreDeeperHeader"
             android:textColor="#FFF"
             android:visibility="invisible" />
+
     </LinearLayout>
 
 </RelativeLayout>
