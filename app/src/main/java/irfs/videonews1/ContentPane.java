@@ -2,7 +2,9 @@ package irfs.videonews1;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.PorterDuff;
+import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,8 +17,10 @@ import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -31,7 +35,7 @@ import java.util.List;
 /**
  * Created by tomh on 18/03/15.
  */
-public class ContentPane extends Fragment implements SurfaceHolder.Callback {
+public class ContentPane extends Fragment implements TextureView.SurfaceTextureListener {
 
 
     //private VideoView mainVideo;
@@ -41,6 +45,7 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
     // media player
     private MediaPlayer mp;
     private SurfaceView mSurfaceView;
+    private TextureView mVideoView;
     private SurfaceHolder holder;
     boolean m_isVisible = false;
     int currentCaptionIndex = -1;
@@ -55,8 +60,12 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
     Chapter chapter;
     Button playButton;
     Button nextCaptionButton, prevCaptionButton;
+    LinearLayout pausedLayout;
+    Button pauseButton;
+    Button resumeButton, replayButton;
     TextView captionView;
     LinearLayout exploreDeeperLayout;
+    TextView exploreDeeperHeader;
     List<Button> exploreButtons = new ArrayList<Button>();
     int chapID = 0;
     VideoProgressBar videoProgressBar;
@@ -117,9 +126,33 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         captionView.setMovementMethod(LinkMovementMethod.getInstance()); //make links clickable
 
         exploreDeeperLayout = (LinearLayout) rootView.findViewById(R.id.exploreDeeperLayout);
-
+        exploreDeeperHeader = (TextView)rootView.findViewById(R.id.exploreDeeperHeader);
 
         // play button
+        pausedLayout = (LinearLayout) rootView.findViewById(R.id.pausedLayout);
+
+        resumeButton = (Button) rootView.findViewById(R.id.resumeButton);
+        resumeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("is","resuming");
+                play();
+            }
+        });
+
+        replayButton = (Button) rootView.findViewById(R.id.replayButton);
+        replayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("is","replaying");
+                play();
+                mp.pause();
+                mp.seekTo(0);
+                play();
+            }
+        });
+
+        /*
         playButton = (Button) rootView.findViewById(R.id.playButton);
         playButton.setAlpha(0);
         playButton.setEnabled(false);
@@ -135,6 +168,7 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
             }
         });
+        */
 
 
         chapter = (Chapter) args.getSerializable("chapter");
@@ -167,16 +201,35 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
             exploreDeeperLayout.addView(b);
             // only show explore deeper if buttons are present
 
-            TextView exploreDeeperHeader = (TextView)rootView.findViewById(R.id.exploreDeeperHeader);
-            if (exploreDeeperHeader != null) {
-                exploreDeeperHeader.setVisibility(View.VISIBLE);
-            }
+            //if (exploreDeeperHeader != null) {
+            //    exploreDeeperHeader.setVisibility(View.VISIBLE);
+            //}
         }
 
 
-        mSurfaceView = (SurfaceView)rootView.findViewById(R.id.videoSurfaceView);
-        holder = mSurfaceView.getHolder();
-        holder.addCallback(this);
+        //mSurfaceView = (SurfaceView)rootView.findViewById(R.id.videoSurfaceView);
+        mVideoView = (TextureView) rootView.findViewById(R.id.videoView);
+        if (parentActivity.portrait) {
+
+            float newAspect = 1f;
+            //mVideoView.getLayoutParams().height = (int) (mVideoView.getWidth() * squariness);
+            int mainDimension = 1080;
+            mVideoView.getLayoutParams().width = mainDimension;
+            mVideoView.getLayoutParams().height = (int) (mainDimension/newAspect);
+            Matrix matrix = new Matrix();
+            float scaleX = (16f/9f) / newAspect;
+            float scaleY = 1f;
+            float pivotX = (float) mainDimension/2f;
+            float pivotY = (mainDimension / newAspect) /2f;
+            Log.d("scaler","scale is " +pivotX + ", y " + pivotY);
+            matrix.setScale(scaleX,scaleY,pivotX,pivotY);
+            //mVideoView.setMinimumHeight((int) (mVideoView.getWidth()*squariness));
+            mVideoView.setTransform(matrix);
+        }
+
+        mVideoView.setSurfaceTextureListener(this);
+        //holder = mVideoView.getHolder();
+        //holder.addCallback(this);
 
         videoSource = Uri.parse(args.getString("uriString"));
 
@@ -192,6 +245,7 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
             }
         });
 
+
         mp.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
             @Override
             public void onSeekComplete(MediaPlayer mp) {
@@ -204,17 +258,27 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
+                /*
                 playButton.setText("↻");
                 playButton.setTag("replay");
                 playButton.setEnabled(true);
                 playButton.setAlpha(1);
+                */
+
+                pausedLayout.setVisibility(View.VISIBLE);
+                resumeButton.setVisibility(View.GONE);
+                pauseButton.setVisibility(View.INVISIBLE);
+                if (exploreDeeperLayout.getChildCount()>0) {
+                    exploreDeeperLayout.setVisibility(View.VISIBLE);
+                    exploreDeeperHeader.setVisibility(View.VISIBLE);
+        }
                 parentActivity.notifyPaused();
                 exploreDeeperLayout.setVisibility(View.VISIBLE);
             }
         });
 
         try {
-            args.getString("chapID");
+            //args.getString("chapID");
             mp.setDataSource(getActivity(), videoSource);
 
             mp.prepareAsync();
@@ -227,11 +291,11 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
         }
 
 
-        Button pauseButton = (Button) rootView.findViewById(R.id.pauseButton);
+        pauseButton = (Button) rootView.findViewById(R.id.pauseButton);
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("is","clicked");
+                Log.d("is","pause button pressed");
                 if (mp.isPlaying()) {
                     pause();
                 }
@@ -276,6 +340,25 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
         return rootView;
     }
+
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
+
+        Surface surface = new Surface(surfaceTexture);
+        mp.setSurface(surface);
+        }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {}
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {}
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+        return true;
+    }
+
 
     private void goToCaption(int index) {
         //stop stupid values
@@ -336,6 +419,7 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
 
     }
 
+    /*
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
@@ -351,6 +435,7 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
     public void surfaceDestroyed(SurfaceHolder holder) {
 
     }
+    */
 
     public void play() {
         if (chapter.hasAudio) {
@@ -359,32 +444,46 @@ public class ContentPane extends Fragment implements SurfaceHolder.Callback {
             mp.setVolume(0, 0);
         }
 
-        playButton.setAlpha(0);
-        playButton.setEnabled(false);
+        //playButton.setAlpha(0);
+        //playButton.setEnabled(false);
 
+        pausedLayout.setVisibility(View.INVISIBLE);
+        pauseButton.setVisibility(View.VISIBLE);
+
+        exploreDeeperLayout.setVisibility(View.INVISIBLE);
+        exploreDeeperHeader.setVisibility(View.INVISIBLE);
 
         mp.start();
         videoTimerHandler.postDelayed(UpdateCaptions, 100);
         parentActivity.notifyPlaying();
 
-        if (!parentActivity.portrait) {
-            exploreDeeperLayout.setVisibility(View.INVISIBLE);
-        }
+        //if (!parentActivity.portrait) {
+        //    exploreDeeperLayout.setVisibility(View.INVISIBLE);
+        //}
 
     }
 
     public void pause() {
 
+        pausedLayout.setVisibility(View.VISIBLE);
+        resumeButton.setVisibility(View.VISIBLE);
+        pauseButton.setVisibility(View.INVISIBLE);
+        if (exploreDeeperLayout.getChildCount()>0) {
+            exploreDeeperLayout.setVisibility(View.VISIBLE);
+            exploreDeeperHeader.setVisibility(View.VISIBLE);
+        }
+        /*
         playButton.setText("►");
         playButton.setTag("play");
         playButton.setEnabled(true);
         playButton.setAlpha(1);
+        */
         mp.pause();
 
         parentActivity.notifyPaused();
-        if (!parentActivity.portrait) {
-            exploreDeeperLayout.setVisibility(View.VISIBLE);
-        }
+        //if (!parentActivity.portrait) {
+        //    exploreDeeperLayout.setVisibility(View.VISIBLE);
+        //}
     }
 
     private Runnable UpdateCaptions = new Runnable() {

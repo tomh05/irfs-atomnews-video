@@ -3,7 +3,8 @@
     android:layout_height="match_parent" android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    android:paddingBottom="0dp" tools:context=".MainActivity">
+    android:paddingBottom="0dp" tools:context=".MainActivity"
+    android:background="#000">
 
     <Button
         android:layout_width="40dp"
@@ -16,7 +17,8 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="40dp"
-        android:gravity="center|center_vertical">
+        android:gravity="center|center_vertical"
+        android:background="#EEE">
 
         <ImageView
             android:layout_width="70dp"
@@ -61,7 +63,8 @@
         android:background="#CCCCCC"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="460dp"/>
+        android:layout_marginTop="460dp"
+        android:visibility="invisible" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"
