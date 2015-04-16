@@ -63,7 +63,7 @@
             android:layout_width="fill_parent"
             android:layout_height="100dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Caption text for article shown above. Kept short."
+            android:text=""
             android:id="@+id/captionView"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"

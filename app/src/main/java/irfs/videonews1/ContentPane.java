@@ -189,6 +189,10 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
             public void onPrepared(MediaPlayer mp) {
                 if (m_isVisible) {
                     play();
+                    if (chapID==0) {
+                        pause(); // don't autoplay first video, but still load video
+                        replayButton.setVisibility(View.GONE);
+                    }
                 }
 
             }
@@ -208,6 +212,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
             public void onCompletion(MediaPlayer mp) {
                 pausedLayout.setVisibility(View.VISIBLE);
                 resumeButton.setVisibility(View.GONE);
+                replayButton.setVisibility(View.VISIBLE);
                 pauseButton.setVisibility(View.INVISIBLE);
                 if (exploreDeeperLayout.getChildCount()>0) {
                     exploreDeeperLayout.setVisibility(View.VISIBLE);
@@ -470,6 +475,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
         pausedLayout.setVisibility(View.VISIBLE);
         resumeButton.setVisibility(View.VISIBLE);
+        replayButton.setVisibility(View.VISIBLE);
         pauseButton.setVisibility(View.INVISIBLE);
         if (exploreDeeperLayout.getChildCount()>0) {
             exploreDeeperLayout.setVisibility(View.VISIBLE);
@@ -592,7 +598,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean("isPlaying",mp.isPlaying());
-        outState.putInt("position",mp.getCurrentPosition());
+        outState.putInt("position", mp.getCurrentPosition());
 
     }
     @Override
