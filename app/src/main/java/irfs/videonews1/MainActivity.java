@@ -70,7 +70,6 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         return timelineModel;
     }
 
-
     public final static int HIDDEN = 0;
     public final static int VISIBLE = 1;
     public final static int WAITING = 2;
@@ -112,7 +111,11 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
             for (int k = 0; k < savedTimelineModel.size(); k++) {
                 addTimelineElement(savedTimelineModel.get(k), -1, false);
             }
-            timelineElements.get(0).setActive(true);
+            //timelineElements.get(0).setActive(true);
+            //int position = savedInstanceState.getInt("lastPosition");
+            //float scrollLoc = timelineElements.get(position).getX() - 50;
+            //Log.d("rest", "I am restoring position " + position + ", SCROLL TO " + scrollLoc);
+            //timelineScrollView.smoothScrollTo((int) scrollLoc,0);
         } else {
             //populate timeline
             for (int k = 0; k < story.initialChapters.size(); k++) {
@@ -145,12 +148,12 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
 
     }
 
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
 
         super.onSaveInstanceState(outState);
         outState.putIntegerArrayList("timelineModel",timelineModel);
+        //outState.putInt("lastPosition",lastPosition);
     }
 
     void goHome() {
@@ -178,13 +181,21 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
             }
             if (lastPosition != position && positionOffset==0.0) {
 
+                Log.d("pos","last pos was "+lastPosition+", current "+position);
                 timelineElements.get(lastPosition).setActive(false);
                 timelineElements.get(lastPosition).setPercent(0);
                 lastPosition = position;
 
                 timelineElements.get(position).setActive(true);
-                float scrollLoc = timelineElements.get(position).getX() - 50;
-                timelineScrollView.smoothScrollTo((int) scrollLoc,0);
+                timelineScrollView.post(new Runnable() { //Posting delays until the view has been set up.
+                    @Override
+                    public void run() {
+
+                        float scrollLoc = timelineElements.get(lastPosition).getX() - 50;
+                        Log.d("autoscroll","auto scrolled to " + scrollLoc);
+                        timelineScrollView.smoothScrollTo((int) scrollLoc,0);
+                    }
+                });
             }
 
         }
@@ -242,7 +253,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
             mPagerAdapter.notifyDataSetChanged();
         }
         timelineElements.add(position,newEl);
-        Log.d("MainActivity","timelineModel is now "+timelineModel);
+        Log.d("addTimelineElement","timelineModel is now "+timelineModel);
 
 
     }

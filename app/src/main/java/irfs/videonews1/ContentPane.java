@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,8 +25,10 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -58,7 +61,6 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
     Uri videoSource;
 
     Chapter chapter;
-    Button playButton;
     Button nextCaptionButton, prevCaptionButton;
     LinearLayout pausedLayout;
     Button pauseButton;
@@ -118,19 +120,15 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
 
         rootView = (ViewGroup) inflater.inflate(R.layout.content_pane,container,false);
-
-
         parentActivity = (MainActivity) getActivity();
 
         captionView = (TextView) rootView.findViewById(R.id.captionView);
         captionView.setMovementMethod(LinkMovementMethod.getInstance()); //make links clickable
-
         exploreDeeperLayout = (LinearLayout) rootView.findViewById(R.id.exploreDeeperLayout);
         exploreDeeperHeader = (TextView)rootView.findViewById(R.id.exploreDeeperHeader);
 
-        // play button
+        // play/resume buttons
         pausedLayout = (LinearLayout) rootView.findViewById(R.id.pausedLayout);
-
         resumeButton = (Button) rootView.findViewById(R.id.resumeButton);
         resumeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,53 +150,21 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
             }
         });
 
-        /*
-        playButton = (Button) rootView.findViewById(R.id.playButton);
-        playButton.setAlpha(0);
-        playButton.setEnabled(false);
-        playButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mp.pause();
-                if (v.getTag() == "replay") {
-                    mp.seekTo(0);
-                }
-                play();
-                playButton.setEnabled(false);
-
-            }
-        });
-        */
-
 
         chapter = (Chapter) args.getSerializable("chapter");
         //captionView.setText(chapter.captions.get(0).body);
         setCaptionText(chapter.captions.get(0).body);
 
+        // Create Explore Deeper links
         for (int i = 0; i<chapter.links.size();i++) {
 
-            Button b = new Button(getActivity());
-            //b.setText(chapter.links.get(i));
+
 
             int chap = chapter.links.get(i);
             String storyTitle =   parentActivity.getStory().chapters.get(chap).title;
-            b.setText(storyTitle);
-            b.setTag(chap);
-            boolean isPresent = parentActivity.getTimelineModel().contains(chap);
-            b.getBackground().setColorFilter(0xFFC80000, PorterDuff.Mode.MULTIPLY);
-            b.setTextColor(Color.WHITE);
-            b.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            b.setEnabled(!isPresent);
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int chapterToLaunch = (int) v.getTag();
-                    parentActivity.addTimelineElement(chapterToLaunch,chapID,true);
-                    v.setEnabled(false);
-                }
-            });
-            exploreButtons.add(b);
-            exploreDeeperLayout.addView(b);
+            addExploreDeeperButton(storyTitle,chap);
+
+
             // only show explore deeper if buttons are present
 
             //if (exploreDeeperHeader != null) {
@@ -209,23 +175,6 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
         //mSurfaceView = (SurfaceView)rootView.findViewById(R.id.videoSurfaceView);
         mVideoView = (TextureView) rootView.findViewById(R.id.videoView);
-        if (parentActivity.portrait) {
-
-            float newAspect = 1f;
-            //mVideoView.getLayoutParams().height = (int) (mVideoView.getWidth() * squariness);
-            int mainDimension = 1080;
-            mVideoView.getLayoutParams().width = mainDimension;
-            mVideoView.getLayoutParams().height = (int) (mainDimension/newAspect);
-            Matrix matrix = new Matrix();
-            float scaleX = (16f/9f) / newAspect;
-            float scaleY = 1f;
-            float pivotX = (float) mainDimension/2f;
-            float pivotY = (mainDimension / newAspect) /2f;
-            Log.d("scaler","scale is " +pivotX + ", y " + pivotY);
-            matrix.setScale(scaleX,scaleY,pivotX,pivotY);
-            //mVideoView.setMinimumHeight((int) (mVideoView.getWidth()*squariness));
-            mVideoView.setTransform(matrix);
-        }
 
         mVideoView.setSurfaceTextureListener(this);
         //holder = mVideoView.getHolder();
@@ -245,7 +194,6 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
             }
         });
 
-
         mp.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
             @Override
             public void onSeekComplete(MediaPlayer mp) {
@@ -258,13 +206,6 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                /*
-                playButton.setText("↻");
-                playButton.setTag("replay");
-                playButton.setEnabled(true);
-                playButton.setAlpha(1);
-                */
-
                 pausedLayout.setVisibility(View.VISIBLE);
                 resumeButton.setVisibility(View.GONE);
                 pauseButton.setVisibility(View.INVISIBLE);
@@ -273,14 +214,11 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
                     exploreDeeperHeader.setVisibility(View.VISIBLE);
         }
                 parentActivity.notifyPaused();
-                exploreDeeperLayout.setVisibility(View.VISIBLE);
             }
         });
 
         try {
-            //args.getString("chapID");
             mp.setDataSource(getActivity(), videoSource);
-
             mp.prepareAsync();
         } catch ( IllegalArgumentException e) {
             e.printStackTrace();
@@ -289,7 +227,6 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         pauseButton = (Button) rootView.findViewById(R.id.pauseButton);
         pauseButton.setOnClickListener(new View.OnClickListener() {
@@ -301,8 +238,6 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
                 }
             }
         });
-
-
 
         //set up caption skip buttons
         if (!parentActivity.portrait) {
@@ -341,24 +276,93 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         return rootView;
     }
 
+
+    private void addExploreDeeperButton(String storyTitle, int chap) {
+        Button b = new Button(getActivity(),null,R.drawable.explore_deeper_button_drawable);
+            //Style the button. This all gets a bit nasty...
+            b.setText(storyTitle);
+            b.setTag(chap);
+            b.setAllCaps(false);
+            int p = 25;
+            b.setPadding(p,p,p,p);
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            int m = 20;
+            layoutParams.setMargins(m,m,m,m);
+            //b.setLayoutParams(layoutParams);
+            boolean isPresent = parentActivity.getTimelineModel().contains(chap);
+            b.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            b.setEnabled(!isPresent);
+            if (isPresent) {
+                b.setTextColor(Color.rgb(200, 200, 200));
+                b.setBackgroundResource(R.drawable.explore_deeper_inactive_button_drawable);
+            } else {
+                b.setTextColor(Color.WHITE);
+                b.setBackgroundResource(R.drawable.explore_deeper_button_drawable);
+            }
+
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int chapterToLaunch = (int) v.getTag();
+                    Button b = (Button) v;
+                    b.setTextColor(Color.rgb(200,200,200));
+                    b.setBackgroundResource(R.drawable.explore_deeper_inactive_button_drawable);
+                    parentActivity.addTimelineElement(chapterToLaunch,chapID,true);
+                    v.setEnabled(false);
+                }
+            });
+        exploreButtons.add(b);
+        exploreDeeperLayout.addView(b,layoutParams);
+    }
+
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
 
+        updateSurfaceTextureSize();
         Surface surface = new Surface(surfaceTexture);
         mp.setSurface(surface);
         }
 
     @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {}
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {
+    }
 
     @Override
-    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {}
+    public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+    }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
         return true;
     }
 
+
+    private void updateSurfaceTextureSize() {
+        if (parentActivity.portrait) {
+
+            float newAspect = 1f;
+            //mVideoView.getLayoutParams().height = (int) (mVideoView.getWidth() * squariness);
+            int mainDimension = 1080;
+            float width = mVideoView.getWidth();
+            //mVideoView.getLayoutParams().width = mainDimension;
+            //mVideoView.getLayoutParams().height = (int) (mainDimension/newAspect);
+            //mVideoView.getLayoutParams().height = (int) (width/newAspect);
+            Matrix matrix = new Matrix();
+            float scaleX = (16f/9f) / newAspect;
+            float scaleY = 1f;
+            float pivotX = (float) width/2f;
+            float pivotY = (width / newAspect) /2f;
+            matrix.setScale(scaleX,scaleY,pivotX,pivotY);
+            //mVideoView.setMinimumHeight((int) (mVideoView.getWidth()*squariness));
+            mVideoView.setTransform(matrix);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoView.getLayoutParams();
+            params.height = (int) (width/newAspect);
+            mVideoView.setLayoutParams(params);
+            //mVideoView.setLayoutParams(new FrameLayout.LayoutParams(viewWidth,viewHeight));
+        }
+
+    }
 
     private void goToCaption(int index) {
         //stop stupid values
@@ -389,7 +393,6 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
     }
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        Bundle args = getArguments();
 
         super.setUserVisibleHint(isVisibleToUser);
 
@@ -507,15 +510,12 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
                 int i;
                 for (i = 0; i < chapter.captions.size(); i++) {
                     if (pos >= chapter.captions.get(i).start && pos < chapter.captions.get(i).end) {
-
                         if (i != currentCaptionIndex) {
                             //Log.d("caption", "I picked index " + i + ", as pos inbetween " + chapter.captions.get(i).start + " and " + chapter.captions.get(i).end);
-
                             currentCaptionIndex = i;
                             setCaptionText(chapter.captions.get(i).body);
                             updateCaptionButtons();
                         }
-
                         break;
                     }
                 }
@@ -588,6 +588,13 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("isPlaying",mp.isPlaying());
+        outState.putInt("position",mp.getCurrentPosition());
+
+    }
     @Override
     public void onDestroyView() {
 

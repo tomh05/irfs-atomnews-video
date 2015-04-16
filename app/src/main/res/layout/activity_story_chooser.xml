@@ -20,7 +20,8 @@
             android:layout_weight="1"
             android:background="#CCC"
             android:gravity="center"
-            android:padding="40dp" />
+            android:padding="40dp"
+            android:layout_margin="10dp" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -31,5 +32,6 @@
             android:layout_weight="1"
             android:background="#AAA"
             android:gravity="center"
-            android:padding="40dp" />
+            android:padding="40dp"
+            android:layout_margin="10dp" />
     </LinearLayout>

@@ -17,12 +17,14 @@ import android.widget.TextView;
  */
 public class TimelineElement extends RelativeLayout {
 
+    float mTextSize = 18;
     float mPercent = 42;
     Path bubblePath = new Path();
     boolean mActive = true;
     Paint paint = new Paint();
     TextView textView;
     float textWidth = 0f;
+    int hPadding = 20;
 
     int backgroundColor = Color.rgb(200,100,100);
 
@@ -81,9 +83,9 @@ public class TimelineElement extends RelativeLayout {
         textView.setVisibility(View.VISIBLE);
         textView.setBackgroundColor(Color.TRANSPARENT);
         //textView.setHeight(120);
-        textView.setPadding(20,20,20,40); //extra space at bottom for arrow.
+        textView.setPadding(hPadding,20,hPadding,40); //extra space at bottom for arrow.
         textView.setTextColor(Color.WHITE);
-        textView.setTextSize(18);
+        textView.setTextSize(mTextSize);
         textView.setSingleLine();
 
         //button.setTag(position);
@@ -94,8 +96,9 @@ public class TimelineElement extends RelativeLayout {
     public void setText(String _text) {
         textView.setText(_text);
         Paint paint = new Paint();
-        paint.setTextSize(62); // nasty hack. Some multiplier of 18?
-        textWidth = paint.measureText(_text);
+        float scaledDensity = getContext().getResources().getDisplayMetrics().scaledDensity;
+        paint.setTextSize(mTextSize*scaledDensity); // nasty hack. Some multiplier of 18?
+        textWidth = paint.measureText(_text) + 2*hPadding;
 
     }
 

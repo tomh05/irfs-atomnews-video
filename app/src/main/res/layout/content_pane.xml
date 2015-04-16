@@ -44,8 +44,9 @@
                 android:text="↻"
                 android:id="@+id/replayButton"
                 android:textSize="60dp"
-                android:background="#00000000"
-                android:textColor="#CCC" />
+                android:background="@drawable/video_control_button_drawable"
+                android:textColor="#CCC"
+                android:layout_margin="5dp" />
 
             <Button
                 android:layout_width="100dp"
@@ -53,8 +54,9 @@
                 android:text="►"
                 android:id="@+id/resumeButton"
                 android:textSize="60dp"
-                android:background="#00000000"
-                android:textColor="#CCC" />
+                android:background="@drawable/video_control_button_drawable"
+                android:textColor="#CCC"
+                android:layout_margin="5dp" />
         </LinearLayout>
 
         <TextView
