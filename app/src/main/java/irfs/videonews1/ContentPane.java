@@ -133,7 +133,6 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         resumeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("is","resuming");
                 play();
             }
         });
@@ -142,7 +141,6 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("is","replaying");
                 play();
                 mp.pause();
                 mp.seekTo(0);
@@ -152,24 +150,14 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
 
         chapter = (Chapter) args.getSerializable("chapter");
-        //captionView.setText(chapter.captions.get(0).body);
         setCaptionText(chapter.captions.get(0).body);
 
         // Create Explore Deeper links
         for (int i = 0; i<chapter.links.size();i++) {
-
-
-
             int chap = chapter.links.get(i);
             String storyTitle =   parentActivity.getStory().chapters.get(chap).title;
             addExploreDeeperButton(storyTitle,chap);
 
-
-            // only show explore deeper if buttons are present
-
-            //if (exploreDeeperHeader != null) {
-            //    exploreDeeperHeader.setVisibility(View.VISIBLE);
-            //}
         }
 
 
@@ -380,6 +368,8 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         if (mp!=null) {
             //currentCaptionIndex = index;
 
+
+            Log.d("seeker","seeking to "+captionTime);
             mp.seekTo(captionTime);
             seeking = true;
             timeSlip=true;

@@ -2,39 +2,39 @@
 "initial_chapters": [0,1,2],
 "chapters": [
 {"start":"0","end":"18000","title":"Overview","hasAudio":false, "captions":[
-    {"start":"0","end":"6000","body":"The Indian government has banned a BBC documentary about a gang rape and murder in Delhi in 2012."  },
-        {"start":"6000","end":"13000","body":"The documentary was controversial because it interviewed one of the convicted rapists in prison."  },
-        {"start":"13000","end":"18000","body":"India says the makers did not have permission to film inside the prison."  }
+    {"start":"0","end":"6880","body":"The Indian government has banned a BBC documentary about a gang rape and murder in Delhi in 2012."  },
+        {"start":"6880","end":"13240","body":"The documentary was controversial because it interviewed one of the convicted rapists in prison."  },
+        {"start":"13240","end":"18000","body":"India says the makers did not have permission to film inside the prison."  }
         ],
         "links":[]},
 {"start":"19000","end":"39000","title":"The Attack","hasAudio":false, "captions":[
-    {"start":"0000","end":"7000","body":"The attack happened when Jyoti Singh and her friend got on a bus in Delhi in 2012."  },
-    {"start":"7000","end":"13000","body":"Once on board, she was gang-raped by six men."},
-    {"start":"13000","end":"21000","body":"She later died of her injuries in a hospital in Singapore."}
+    {"start":"0000","end":"7160","body":"The attack happened when Jyoti Singh and her friend got on a bus in Delhi in 2012."  },
+    {"start":"7160","end":"12240","body":"Once on board, she was gang-raped by six men."},
+    {"start":"12240","end":"21000","body":"She later died of her injuries in a hospital in Singapore."}
     ], 
     "links":[3]},
 {"start":"41000","end":"59000","title":"The Victim","hasAudio":false, "captions":[
-    {"start":"0000","end":"6000","body":"<a href='Nirbhaya'>Jyoti Singh</a> was a 23-year old medical student."  },
-    {"start":"6000","end":"13000","body":"She came to be known across India as Nirbhaya"  },
-    {"start":"13000","end":"18000","body":"A Hindi word meaning “fearless”."  }
+    {"start":"0000","end":"6760","body":"<a href='Nirbhaya'>Jyoti Singh</a> was a 23-year old medical student."  },
+    {"start":"6760","end":"13360","body":"She came to be known across India as Nirbhaya"  },
+    {"start":"13360","end":"18000","body":"A Hindi word meaning “fearless”."  }
     ], 
     "links":[4]},
 {"start":"60000","end":"80000","title":"The Attackers","hasAudio":false, "captions":[
-    {"start":"0","end":"6000","body":"Four men are currently on death row for the rape and murder." },
-    {"start":"6000","end":"13000","body":"They are Mukesh Singh, Vinay Sharma, Pawan Gupta and Akshay Thakur."},
-    {"start":"13000","end":"20000","body":"One of the men was interviewed from his prison in the documentary."}
+    {"start":"0","end":"6240","body":"Four men are currently on death row for the rape and murder." },
+    {"start":"6240","end":"13240","body":"They are Mukesh Singh, Vinay Sharma, Pawan Gupta and Akshay Thakur."},
+    {"start":"13240","end":"20000","body":"One of the men was interviewed from his prison in the documentary."}
     ], 
     "links":[6]},
     {"start":"81000","end":"100000","title":"The Documentary","hasAudio":false, "captions":[
-    {"start":"0000","end":"7000","body":"Filmmaker <a href='Leslee Udwin'>Leslee Udwin</a> called the documentary “<a href='India’s Daughter'>India’s Daughter</a>”."  },
-    {"start":"7000","end":"14000","body":"She has pleaded for the film to be released in India."  },
-    {"start":"14000","end":"19000","body":"And has called on government officials to watch the film before condemning it."  }
+    {"start":"0000","end":"6880","body":"Filmmaker <a href='Leslee Udwin'>Leslee Udwin</a> called the documentary “<a href='India’s Daughter'>India’s Daughter</a>”."  },
+    {"start":"6880","end":"13600","body":"She has pleaded for the film to be released in India."  },
+    {"start":"13600","end":"19000","body":"And has called on government officials to watch the film before condemning it."  }
     ], 
     "links":[5,7]},
 {"start":"101000","end":"120000","title":"Women in India","hasAudio":false, "captions":[
-    {"start":"0","end":"7000","body":"The documentary has been hugely controversial inside India."  },
-    {"start":"7000","end":"13000","body":"Women’s groups say the rapists views <a href='Violence against Women in India'>are shared widely</a>."  },
-    {"start":"13000","end":"19000","body":"Critics say the documentary gives an unfair impression of Indian men."  }
+    {"start":"0","end":"6880","body":"The documentary has been hugely controversial inside India."  },
+    {"start":"6880","end":"13160","body":"Women’s groups say the rapists views <a href='Violence against Women in India'>are shared widely</a>."  },
+    {"start":"13160","end":"19000","body":"Critics say the documentary gives an unfair impression of Indian men."  }
     ], 
     "links":[]},
 {"start":"121000","end":"148000","title":"Rapist Interview","hasAudio":true, "captions":[
