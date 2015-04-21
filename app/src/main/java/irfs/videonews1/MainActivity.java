@@ -97,10 +97,10 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         Log.d("MainActivity","Survived...");
 
 
-        if (portrait) {
-            TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
-            titleTextView.setText(story.title);
-        }
+        //if (portrait) {
+        //    TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
+        //    titleTextView.setText(story.title);
+        //`}
 
         timelineLayout = (LinearLayout) findViewById(R.id.timelineLayout);
         timelineScrollView = (HorizontalScrollView) findViewById(R.id.timelineScrollView);
@@ -132,19 +132,19 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
 
 
 
-        if (portrait) {
+        //if (portrait) {
         // home button
-        Button homeButton = (Button) findViewById(R.id.homeButton);
-        homeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goHome();
-            }
-        });
+        //Button homeButton = (Button) findViewById(R.id.homeButton);
+        //homeButton.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+        //    public void onClick(View v) {
+        //        goHome();
+        //    }
+        //});
 
-        } else {
+        //} else {
             //hideTimeline();
-        }
+        //}
 
     }
 

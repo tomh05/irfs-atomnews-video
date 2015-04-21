@@ -6,71 +6,18 @@
     android:paddingBottom="0dp" tools:context=".MainActivity"
     android:background="#000">
 
-    <Button
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:text="◄"
-        android:id="@+id/homeButton"
-        android:background="#3FFF" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:gravity="center|center_vertical"
-        android:background="#EEE">
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:id="@+id/imageView"
-            android:src="@mipmap/bbc_logo" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Elastic News"
-            android:textSize="16dp"
-            android:id="@+id/textView" />
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Article Title"
-        android:id="@+id/titleTextView"
-        android:layout_marginTop="40dp"
-        android:textColor="#FFF"
-        android:background="#333"
-        android:gravity="center_vertical|center_horizontal"
-        android:textSize="16dp" />
-
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/content_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="118dp" />
+        android:layout_marginTop="38dp" />
 
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Explore Deeper"
-        android:id="@+id/exploreDeeper"
-        android:background="#CCCCCC"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="460dp"
-        android:visibility="invisible" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:id="@+id/timelineScrollView"
-        android:layout_marginTop="80dp"
         android:scrollbars="none">
 
         <LinearLayout
@@ -83,76 +30,68 @@
             </LinearLayout>
     </HorizontalScrollView>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Added ►"
-        android:id="@+id/addedTimelineIndicator"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="33dp"
-        android:background="#00AA00"
-        android:autoText="true"
-        android:textColor="#ffffffff"
-        android:textSize="18sp"
-        android:paddingLeft="20px"
-        android:paddingTop="19px"
-        android:paddingRight="20px"
-        android:paddingBottom="19px"
-        android:layout_marginRight="0dp"
-        android:alpha="0" />
-
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#66000000"
+        android:background="#7F000000"
         android:layout_marginLeft="0dp"
         android:layout_marginTop="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginBottom="0dp"
-        android:padding="40dp"
         android:id="@+id/overlayLayout"
-        android:visibility="invisible">
+        android:visibility="invisible"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFF">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OverlayTitle"
-                android:id="@+id/overlayTitle"
-                android:textSize="24dp"
-                android:textStyle="bold"
-                android:paddingBottom="10dp"
-                android:layout_weight="1"
-                android:padding="10dp" />
+            android:layout_height="fill_parent"
+            android:background="#E6000000">
 
             <Button
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:text="×"
-                android:id="@+id/overlayClose" />
-        </LinearLayout>
+                android:id="@+id/overlayClose"
+                android:layout_gravity="right" />
 
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/scrollView" >
-
-            <TextView
+            <ScrollView
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="What are you hacking off? Is it my torso?! &apos;It is!&apos; My precious torso! Good news, everyone! I&apos;ve taught the toaster to feel love! I am the man with no name, Zapp Brannigan! I&apos;m sorry, guys. I never meant to hurt you. Just to destroy everything you ever believed in. Whoa a real live robot; or is that some kind of cheesy New Year&apos;s costume? Michelle, I don&apos;t regret this, but I both rue and lament it.What are you hacking off? Is it my torso?! &apos;It is!&apos; My precious torso! Good news, everyone! I&apos;ve taught the toaster to feel love! I am the man with no name, Zapp Brannigan! I&apos;m sorry, guys. I never meant to hurt you. Just to destroy everything you ever believed in. Whoa a real live robot; or is that some kind of cheesy New Year&apos;s costume? Michelle, I don&apos;t regret this, but I both rue and lament it.What are you hacking off? Is it my torso?! &apos;It is!&apos; My precious torso! Good news, everyone! I&apos;ve taught the toaster to feel love! I am the man with no name, Zapp Brannigan! I&apos;m sorry, guys. I never meant to hurt you. Just to destroy everything you ever believed in. Whoa a real live robot; or is that some kind of cheesy New Year&apos;s costume? Michelle, I don&apos;t regret this, but I both rue and lament it."
-                android:id="@+id/overlayBody"
-                android:layout_weight="1"
-                android:background="#FFF"
-                android:padding="10dp" />
-        </ScrollView>
+                android:layout_height="fill_parent"
+                android:id="@+id/scrollView">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="OverlayTitle"
+                        android:id="@+id/overlayTitle"
+                        android:textSize="24dp"
+                        android:textStyle="bold"
+                        android:paddingBottom="10dp"
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:textColor="#FFF" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="What are you hacking off? Is it my torso?! &apos;It is!&apos; My precious torso! Good news, everyone! I&apos;ve taught the toaster to feel love! I am the man with no name, Zapp Brannigan! I&apos;m sorry, guys. I never meant to hurt you. Just to destroy everything you ever believed in. Whoa a real live robot; or is that some kind of cheesy New Year&apos;s costume? Michelle, I don&apos;t regret this, but I both rue and lament it.What are you hacking off? Is it my torso?! &apos;It is!&apos; My precious torso! Good news, everyone! I&apos;ve taught the toaster to feel love! I am the man with no name, Zapp Brannigan! I&apos;m sorry, guys. I never meant to hurt you. Just to destroy everything you ever believed in. Whoa a real live robot; or is that some kind of cheesy New Year&apos;s costume? Michelle, I don&apos;t regret this, but I both rue and lament it.What are you hacking off? Is it my torso?! &apos;It is!&apos; My precious torso! Good news, everyone! I&apos;ve taught the toaster to feel love! I am the man with no name, Zapp Brannigan! I&apos;m sorry, guys. I never meant to hurt you. Just to destroy everything you ever believed in. Whoa a real live robot; or is that some kind of cheesy New Year&apos;s costume? Michelle, I don&apos;t regret this, but I both rue and lament it."
+                        android:id="@+id/overlayBody"
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:textColor="#FFF" />
+                </LinearLayout>
+            </ScrollView>
+
+        </LinearLayout>
 
     </LinearLayout>
 

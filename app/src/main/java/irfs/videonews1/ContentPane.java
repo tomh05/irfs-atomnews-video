@@ -125,7 +125,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         captionView = (TextView) rootView.findViewById(R.id.captionView);
         captionView.setMovementMethod(LinkMovementMethod.getInstance()); //make links clickable
         exploreDeeperLayout = (LinearLayout) rootView.findViewById(R.id.exploreDeeperLayout);
-        exploreDeeperHeader = (TextView)rootView.findViewById(R.id.exploreDeeperHeader);
+        //exploreDeeperHeader = (TextView)rootView.findViewById(R.id.exploreDeeperHeader);
 
         // play/resume buttons
         pausedLayout = (LinearLayout) rootView.findViewById(R.id.pausedLayout);
@@ -204,7 +204,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
                 pauseButton.setVisibility(View.INVISIBLE);
                 if (exploreDeeperLayout.getChildCount()>0) {
                     exploreDeeperLayout.setVisibility(View.VISIBLE);
-                    exploreDeeperHeader.setVisibility(View.VISIBLE);
+                    //exploreDeeperHeader.setVisibility(View.VISIBLE);
         }
                 parentActivity.notifyPaused();
             }
@@ -271,11 +271,12 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
 
     private void addExploreDeeperButton(String storyTitle, int chap) {
-        Button b = new Button(getActivity(),null,R.drawable.explore_deeper_button_drawable);
+        Button b = new Button(getActivity());
             //Style the button. This all gets a bit nasty...
             b.setText(storyTitle);
             b.setTag(chap);
             b.setAllCaps(false);
+        b.setBackgroundColor(Color.argb(40,0,0,0));
             int p = 25;
             b.setPadding(p,p,p,p);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -449,7 +450,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         pauseButton.setVisibility(View.VISIBLE);
 
         exploreDeeperLayout.setVisibility(View.INVISIBLE);
-        exploreDeeperHeader.setVisibility(View.INVISIBLE);
+        //exploreDeeperHeader.setVisibility(View.INVISIBLE);
 
         mp.start();
         videoTimerHandler.postDelayed(UpdateCaptions, 100);
@@ -469,7 +470,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         pauseButton.setVisibility(View.INVISIBLE);
         if (exploreDeeperLayout.getChildCount()>0) {
             exploreDeeperLayout.setVisibility(View.VISIBLE);
-            exploreDeeperHeader.setVisibility(View.VISIBLE);
+            //exploreDeeperHeader.setVisibility(View.VISIBLE);
         }
         /*
         playButton.setText("►");

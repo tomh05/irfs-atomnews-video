@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#000">
 <!--
     <VideoView
         android:layout_width="match_parent"
@@ -11,7 +12,7 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="360dp">
+        android:layout_height="460dp">
 
         <TextureView
             android:layout_width="match_parent"
@@ -63,13 +64,14 @@
             android:layout_width="fill_parent"
             android:layout_height="100dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text=""
+            android:text="Hello here is some text that can be displayed on a line"
             android:id="@+id/captionView"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="3dp"
             android:background="#99000000"
-            android:textSize="20dp"
+            android:textSize="30dp"
+            android:fontFamily="sans-serif-light"
             android:paddingBottom="3dp"
             android:textColorLink="#CC6666"
             android:layout_marginTop="280dp"
@@ -78,17 +80,6 @@
     </RelativeLayout>
 
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Explore Deeper"
-        android:id="@+id/exploreDeeperHeader"
-        android:background="#444"
-        android:textColor="#EEE"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:visibility="invisible" />
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
@@ -96,7 +87,6 @@
         android:id="@+id/exploreDeeperLayout"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:background="#333"
         android:visibility="invisible">
 
     </LinearLayout>
