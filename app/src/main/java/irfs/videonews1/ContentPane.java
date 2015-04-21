@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
@@ -64,15 +65,17 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
     Button nextCaptionButton, prevCaptionButton;
     LinearLayout pausedLayout;
     Button pauseButton;
-    Button resumeButton, replayButton;
+    ImageButton resumeButton, replayButton;
     TextView captionView;
     LinearLayout exploreDeeperLayout;
-    TextView exploreDeeperHeader;
+    //TextView exploreDeeperHeader;
     List<Button> exploreButtons = new ArrayList<Button>();
     int chapID = 0;
     VideoProgressBar videoProgressBar;
 
     MainActivity parentActivity;
+
+    private static int updateInterval = 60;
 
 
     public int getChapID() {
@@ -129,7 +132,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
         // play/resume buttons
         pausedLayout = (LinearLayout) rootView.findViewById(R.id.pausedLayout);
-        resumeButton = (Button) rootView.findViewById(R.id.resumeButton);
+        resumeButton = (ImageButton) rootView.findViewById(R.id.resumeButton);
         resumeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,7 +140,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
             }
         });
 
-        replayButton = (Button) rootView.findViewById(R.id.replayButton);
+        replayButton = (ImageButton) rootView.findViewById(R.id.replayButton);
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -202,10 +205,10 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
                 resumeButton.setVisibility(View.GONE);
                 replayButton.setVisibility(View.VISIBLE);
                 pauseButton.setVisibility(View.INVISIBLE);
-                if (exploreDeeperLayout.getChildCount()>0) {
-                    exploreDeeperLayout.setVisibility(View.VISIBLE);
+                //if (exploreDeeperLayout.getChildCount()>0) {
+                //    exploreDeeperLayout.setVisibility(View.VISIBLE);
                     //exploreDeeperHeader.setVisibility(View.VISIBLE);
-        }
+                //}
                 parentActivity.notifyPaused();
             }
         });
@@ -233,7 +236,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         });
 
         //set up caption skip buttons
-        if (!parentActivity.portrait) {
+        //if (!parentActivity.portrait) {
             nextCaptionButton = (Button) rootView.findViewById(R.id.nextCaption);
             nextCaptionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -255,15 +258,15 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
                     }
                 }
             });
-        }
+        //}
 
         //set up video progress bar
-        if (!parentActivity.portrait) {
+        //if (!parentActivity.portrait) {
             videoProgressBar = (VideoProgressBar) rootView.findViewById(R.id.videoProgressBar);
             int[] positions = new int[chapter.captions.size()];
             for (int i =0;i<positions.length;i++) positions[i] = chapter.captions.get(i).start;
             videoProgressBar.setCaptionPositions(positions);
-        }
+        //}
 
 
         return rootView;
@@ -449,11 +452,11 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         pausedLayout.setVisibility(View.INVISIBLE);
         pauseButton.setVisibility(View.VISIBLE);
 
-        exploreDeeperLayout.setVisibility(View.INVISIBLE);
+        //exploreDeeperLayout.setVisibility(View.INVISIBLE);
         //exploreDeeperHeader.setVisibility(View.INVISIBLE);
 
         mp.start();
-        videoTimerHandler.postDelayed(UpdateCaptions, 100);
+        videoTimerHandler.postDelayed(UpdateCaptions, updateInterval);
         parentActivity.notifyPlaying();
 
         //if (!parentActivity.portrait) {
@@ -468,10 +471,10 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         resumeButton.setVisibility(View.VISIBLE);
         replayButton.setVisibility(View.VISIBLE);
         pauseButton.setVisibility(View.INVISIBLE);
-        if (exploreDeeperLayout.getChildCount()>0) {
-            exploreDeeperLayout.setVisibility(View.VISIBLE);
+        //if (exploreDeeperLayout.getChildCount()>0) {
+        //    exploreDeeperLayout.setVisibility(View.VISIBLE);
             //exploreDeeperHeader.setVisibility(View.VISIBLE);
-        }
+        //}
         /*
         playButton.setText("►");
         playButton.setTag("play");
@@ -519,7 +522,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
             }
 
             if (mp.isPlaying()) {
-                videoTimerHandler.postDelayed(this, 100);
+                videoTimerHandler.postDelayed(this, updateInterval);
             }
         }
     };
@@ -528,18 +531,18 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         float percent = 100.0f * (float) mp.getCurrentPosition()/ (float )mp.getDuration();
         mUpdatePercentListener.updatePercent(chapID, percent);
 
-        if (!parentActivity.portrait) {
+        //if (!parentActivity.portrait) {
             videoProgressBar = (VideoProgressBar) rootView.findViewById(R.id.videoProgressBar);
             videoProgressBar.setDuration(mp.getDuration());
             videoProgressBar.setPosition(mp.getCurrentPosition());
 
-        }
+        //}
     }
 
     private void updateCaptionButtons() {
 
 
-        if (!parentActivity.portrait) {
+        //if (!parentActivity.portrait) {
             if (currentCaptionIndex > 0) {
                 prevCaptionButton.setText("<");
             } else {
@@ -552,7 +555,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
                 nextCaptionButton.setText("");
             }
 
-        }
+        //}
     }
 
     // creates hyperlinks in text

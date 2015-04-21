@@ -1,12 +1,12 @@
 {"title":"Why do some Indians want to #bantheBBC?",
-"initial_chapters": [0,1,2],
+"initial_chapters": [0],
 "chapters": [
 {"start":"0","end":"18000","title":"Overview","hasAudio":false, "captions":[
     {"start":"0","end":"6880","body":"The Indian government has banned a BBC documentary about a gang rape and murder in Delhi in 2012."  },
         {"start":"6880","end":"13240","body":"The documentary was controversial because it interviewed one of the convicted rapists in prison."  },
         {"start":"13240","end":"18000","body":"India says the makers did not have permission to film inside the prison."  }
         ],
-        "links":[]},
+        "links":[1,2]},
 {"start":"19000","end":"39000","title":"The Attack","hasAudio":false, "captions":[
     {"start":"0000","end":"7160","body":"The attack happened when Jyoti Singh and her friend got on a bus in Delhi in 2012."  },
     {"start":"7160","end":"12240","body":"Once on board, she was gang-raped by six men."},
@@ -49,5 +49,5 @@
 "extras":[{"name":"Nirbhaya", "body":"23-year old Jyoti Singh Pandey has become known as “Nirbhaya”, or fearless, in India. She was born and raised in Delhi, and was studying physiotherapy.\n\nShe had just finished watching the film “The Life of Pi” with her friend Avnindra Pandey when they tried to board a bus home and were attacked.\n\nNirbhaya’s parents say they are “proud of her” and want a new law against violence to be named in her honour."},
 {"name":"Violence against Women in India", "body":"About once every five minutes an incident of domestic violence is reported in India, under its legal definition of “cruelty by husband or his relatives”\n\nThe number of reported cases has more than doubled in the last ten years.\n\nCampaigners say that could be because the Indian government brought in a new law in 2005 to protect women against violence at home and more women are coming out to seek help."},
 {"name":"Leslee Udwin", "body":"Age: 59 \nNationality: British/Israeli \nOccupation: Actress and filmmaker \n\nShe produced the film India’s Daughter as well as the popular film “East is East”."},
-{"name":"India’s Daughter", "body":"BBC Storyville Documentary\n\nRuntime: 58 minutes \nReleased: 4 March 2015 \n\n\n\n(Link to Iplayer: http://www.bbc.co.uk/programmes/b05534p0)"}]
+{"name":"India’s Daughter", "body":"BBC Storyville Documentary\n\nRuntime: 58 minutes \nReleased: 4 March 2015 \n\n\n\nWatch on iPlayer: http://www.bbc.co.uk/programmes/b05534p0"}]
 }

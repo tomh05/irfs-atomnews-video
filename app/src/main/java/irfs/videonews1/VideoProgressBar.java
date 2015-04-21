@@ -16,6 +16,8 @@ import java.util.ArrayList;
 public class VideoProgressBar extends View {
 
     Paint mPaint;
+    int foregroundColor = Color.rgb(180,0,1);
+    int backgroundColor = Color.rgb(85,85,85);
 
     public void setPosition(int position) {
         this.position = position;
@@ -96,13 +98,26 @@ public class VideoProgressBar extends View {
         float centre = (getHeight() / 2);
 
         // back line
-        mPaint.setColor(Color.rgb(200,100,100));
-        canvas.drawRect(0, centre - (getHeight()/8), getWidth(), centre + (getHeight()/8), mPaint);
+        mPaint.setColor(backgroundColor);
+
+        float gap = 4f;
+        for (int i = 0; i<captionPositions.length-1;i++) {
+            float startX = ((float) captionPositions[i]) / ((float) duration)*getWidth() + gap;
+            float endX = ((float) captionPositions[i+1]) / ((float) duration)*getWidth() - gap;
+
+            canvas.drawRect(startX,0,endX,getHeight(), mPaint);
+        }
+
+        if (captionPositions.length>0) {
+            float finalX = ((float) captionPositions[captionPositions.length - 1]) / ((float) duration) * getWidth() + gap;
+            canvas.drawRect(finalX, 0, getWidth(), getHeight(), mPaint);
+        }
 
         // front line
-        mPaint.setColor(Color.rgb(200,0,0));
-        canvas.drawRect(0, centre - (getHeight()/4), barWidth, centre + (getHeight()/4), mPaint);
+        mPaint.setColor(foregroundColor);
+        canvas.drawRect(0, 0, barWidth,getHeight(), mPaint);
 
+        /*
         for (int i = 0; i<captionPositions.length;i++) {
             float x = ((float) captionPositions[i]) / ((float) duration)*getWidth();
             if (position<captionPositions[i]) {
@@ -112,5 +127,6 @@ public class VideoProgressBar extends View {
             }
             canvas.drawCircle(x,getHeight()/2,getHeight()/2,mPaint);
         }
+        */
     }
 }

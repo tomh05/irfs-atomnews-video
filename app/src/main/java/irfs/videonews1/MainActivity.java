@@ -48,8 +48,6 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
     private VideoView mainVideo;
     private MediaController mediaControls;
 
-
-
     private ArrayList<Integer> timelineModel = new ArrayList<Integer>(); // Integer list of chapters currently in timeline
     private ArrayList<TimelineElement> timelineElements = new ArrayList<TimelineElement>(); // List of the timeline "button" elements at top of page
 
@@ -223,6 +221,9 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         newEl.setPercent(0);
         newEl.setActive(false);
         newEl.setClickable(true);
+        //newEl.setPadding(0,0,4,0);
+        //ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        //newEl.setLayoutParams(params);
 
         newEl.setOnClickListener(new View.OnClickListener() {
             @Override

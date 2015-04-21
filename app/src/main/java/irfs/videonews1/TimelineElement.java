@@ -9,6 +9,8 @@ import android.graphics.Region;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,8 +19,8 @@ import android.widget.TextView;
  */
 public class TimelineElement extends RelativeLayout {
 
-    float mTextSize = 18;
-    float mPercent = 42;
+    float mTextSize = 20;
+    float mPercent = 0;
     Path bubblePath = new Path();
     boolean mActive = true;
     Paint paint = new Paint();
@@ -26,7 +28,8 @@ public class TimelineElement extends RelativeLayout {
     float textWidth = 0f;
     int hPadding = 20;
 
-    int backgroundColor = Color.rgb(200,100,100);
+    int foregroundColor = Color.rgb(180,0,1);
+    int backgroundColor = Color.rgb(154,154,154);
 
     public TimelineElement (final Context context, int position) {
         super(context);
@@ -47,17 +50,23 @@ public class TimelineElement extends RelativeLayout {
         float widthInterp = _interp/0.3f;
         if (widthInterp>1f) widthInterp = 1f;
         int newWidth = (int) (textWidth * (widthInterp));
-        textView.setWidth(newWidth);
+        //textView.setWidth(newWidth);
+
+        int height= (int) (48 * getResources().getDisplayMetrics().scaledDensity);
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(newWidth,height);
+        p.rightMargin = 4;
+        setLayoutParams(p);
 
         // morph color
-        // 0    200 0
-        // 200, 100 100
+        // 19 170 15
+        // 154, 154, 154
         float colorInterp = (_interp - 0.9f) / 0.1f;
         if (colorInterp<0) colorInterp=0;
-        int r = (int) (200f * colorInterp);
-        int g = 200 - (int) (100 * colorInterp);
-        int b = (int) (100f * colorInterp);
+        int r = 19  + (int) ((float)(154-19) * colorInterp);
+        int g = 170 + (int) ((float)(154-170) * colorInterp);
+        int b = 15  + (int) ((float)(154-15) * colorInterp);
         backgroundColor = Color.rgb(r,g,b);
+        invalidate();
         //rebuildPath();
     }
 
@@ -77,6 +86,12 @@ public class TimelineElement extends RelativeLayout {
 
         setLayerType(View.LAYER_TYPE_SOFTWARE,null);
         setWillNotDraw(false);
+
+
+        int defaultHeight= (int) (48 * getContext().getResources().getDisplayMetrics().scaledDensity);
+        LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, defaultHeight);
+        p.rightMargin = 4;
+        setLayoutParams(p);
 
         textView = new TextView(context);
         textView.setText("");
@@ -99,6 +114,7 @@ public class TimelineElement extends RelativeLayout {
         float scaledDensity = getContext().getResources().getDisplayMetrics().scaledDensity;
         paint.setTextSize(mTextSize*scaledDensity); // nasty hack. Some multiplier of 18?
         textWidth = paint.measureText(_text) + 2*hPadding;
+        textView.setWidth((int)textWidth);
 
     }
 
@@ -149,8 +165,8 @@ public class TimelineElement extends RelativeLayout {
 
         //getAlpha();
         canvas.save();
-        paint.setColor(Color.BLUE);
-        canvas.drawRect(0,0,canvas.getWidth(),80,paint);
+        //paint.setColor(Color.BLUE);
+        //canvas.drawRect(0,0,canvas.getWidth(),80,paint);
         //canvas.clipPath(bubblePath, Region.Op.UNION); // doesnt clip anything
         //canvas.clipPath(bubblePath, Region.Op.INTERSECT); // makes top dissapear
         //canvas.clipPath(bubblePath, Region.Op.REVERSE_DIFFERENCE); // draws no background
@@ -164,24 +180,49 @@ public class TimelineElement extends RelativeLayout {
 
         paint.setStyle(Paint.Style.FILL);
         //paint.setColor(Color.rgb(200, 0, 0));
-        paint.setColor(Color.rgb(200, 0, 0));
+        paint.setColor(foregroundColor);
         float barwidth = getWidth() * (mPercent / 100.0f);
         canvas.drawRect(0,0,barwidth,getHeight(),paint);
 
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(5);
-        canvas.drawPath(bubblePath,paint);
+        //paint.setStyle(Paint.Style.STROKE);
+        //paint.setColor(Color.WHITE);
+        //paint.setStrokeWidth(5);
+        //canvas.drawPath(bubblePath,paint);
 
         canvas.restore();
 
     }
 
-    @Override
+
     protected void onMeasure( int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec,heightMeasureSpec);
         setMeasuredDimension(getMeasuredWidth(),getMeasuredHeight());
-        //setMeasuredDimension(300,200);
-    }
 
+        //setMeasuredDimension(300,200);
+        int defaultWidth = (int) textWidth;
+        int defaultHeight= (int) (48 * getContext().getResources().getDisplayMetrics().scaledDensity);
+
+        int width, height;
+
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+
+        if (widthMode == MeasureSpec.EXACTLY) { // match parent
+            width = widthSize;
+        } else if (widthMode == MeasureSpec.AT_MOST) { //either
+            width = Math.min(defaultWidth, widthSize);
+        } else { width = defaultWidth; }//wrap content
+
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        if (heightMode == MeasureSpec.EXACTLY) {
+            height = heightSize;
+        } else if (heightMode == MeasureSpec.AT_MOST) {
+            height = Math.min(defaultHeight, heightSize);
+        } else { height = defaultHeight; }
+
+        setMeasuredDimension(width, height);
+    }
 }
+

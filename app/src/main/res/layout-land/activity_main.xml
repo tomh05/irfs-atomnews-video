@@ -3,7 +3,8 @@
     android:layout_height="match_parent" android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    android:paddingBottom="0dp" tools:context=".MainActivity">
+    android:paddingBottom="0dp" tools:context=".MainActivity"
+    android:background="#000">
 
     <android.support.v4.view.ViewPager
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,59 +29,72 @@
         </LinearLayout>
     </HorizontalScrollView>
 
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#66000000"
+        android:background="#7F000000"
         android:layout_marginLeft="0dp"
         android:layout_marginTop="0dp"
         android:layout_marginRight="0dp"
         android:layout_marginBottom="0dp"
-        android:padding="40dp"
         android:id="@+id/overlayLayout"
-        android:visibility="invisible">
+        android:visibility="invisible"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFF">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="OverlayTitle"
-                android:id="@+id/overlayTitle"
-                android:textSize="24dp"
-                android:textStyle="bold"
-                android:paddingBottom="10dp"
-                android:layout_weight="1"
-                android:padding="10dp" />
+            android:layout_height="fill_parent"
+            android:background="#E6000000">
 
             <Button
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:text="×"
-                android:id="@+id/overlayClose" />
+                android:id="@+id/overlayClose"
+                android:layout_gravity="right" />
+
+            <ScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/scrollView">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="OverlayTitle"
+                        android:id="@+id/overlayTitle"
+                        android:textSize="24dp"
+                        android:fontFamily="sans-serif-light"
+                        android:paddingBottom="10dp"
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:textColor="#FFF" />
+
+                    <TextView
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="Here is some overlay text. Lorum Ipsum...."
+                        android:fontFamily="sans-serif-light"
+                        android:id="@+id/overlayBody"
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:textColor="#FFF" />
+                </LinearLayout>
+            </ScrollView>
+
         </LinearLayout>
 
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/scrollView" >
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="What are you hacking off? Is it my torso?! &apos;It is!&apos; My precious torso! Good news, everyone! I&apos;ve taught the toaster to feel love! I am the man with no name, Zapp Brannigan! I&apos;m sorry, guys. I never meant to hurt you. Just to destroy everything you ever believed in. Whoa a real live robot; or is that some kind of cheesy New Year&apos;s costume? Michelle, I don&apos;t regret this, but I both rue and lament it.What are you hacking off? Is it my torso?! &apos;It is!&apos; My precious torso! Good news, everyone! I&apos;ve taught the toaster to feel love! I am the man with no name, Zapp Brannigan! I&apos;m sorry, guys. I never meant to hurt you. Just to destroy everything you ever believed in. Whoa a real live robot; or is that some kind of cheesy New Year&apos;s costume? Michelle, I don&apos;t regret this, but I both rue and lament it.What are you hacking off? Is it my torso?! &apos;It is!&apos; My precious torso! Good news, everyone! I&apos;ve taught the toaster to feel love! I am the man with no name, Zapp Brannigan! I&apos;m sorry, guys. I never meant to hurt you. Just to destroy everything you ever believed in. Whoa a real live robot; or is that some kind of cheesy New Year&apos;s costume? Michelle, I don&apos;t regret this, but I both rue and lament it."
-                android:id="@+id/overlayBody"
-                android:layout_weight="1"
-                android:background="#FFF"
-                android:padding="10dp" />
-        </ScrollView>
-
     </LinearLayout>
+
 
 </RelativeLayout>

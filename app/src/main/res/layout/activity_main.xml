@@ -11,7 +11,7 @@
         android:id="@+id/content_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="38dp" />
+        android:layout_marginTop="40dp" />
 
 
     <HorizontalScrollView
@@ -73,7 +73,7 @@
                         android:text="OverlayTitle"
                         android:id="@+id/overlayTitle"
                         android:textSize="24dp"
-                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-light"
                         android:paddingBottom="10dp"
                         android:layout_weight="1"
                         android:padding="10dp"
@@ -83,11 +83,15 @@
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="What are you hacking off? Is it my torso?! &apos;It is!&apos; My precious torso! Good news, everyone! I&apos;ve taught the toaster to feel love! I am the man with no name, Zapp Brannigan! I&apos;m sorry, guys. I never meant to hurt you. Just to destroy everything you ever believed in. Whoa a real live robot; or is that some kind of cheesy New Year&apos;s costume? Michelle, I don&apos;t regret this, but I both rue and lament it.What are you hacking off? Is it my torso?! &apos;It is!&apos; My precious torso! Good news, everyone! I&apos;ve taught the toaster to feel love! I am the man with no name, Zapp Brannigan! I&apos;m sorry, guys. I never meant to hurt you. Just to destroy everything you ever believed in. Whoa a real live robot; or is that some kind of cheesy New Year&apos;s costume? Michelle, I don&apos;t regret this, but I both rue and lament it.What are you hacking off? Is it my torso?! &apos;It is!&apos; My precious torso! Good news, everyone! I&apos;ve taught the toaster to feel love! I am the man with no name, Zapp Brannigan! I&apos;m sorry, guys. I never meant to hurt you. Just to destroy everything you ever believed in. Whoa a real live robot; or is that some kind of cheesy New Year&apos;s costume? Michelle, I don&apos;t regret this, but I both rue and lament it."
+                        android:text="Here is some overlay text. Lorum Ipsum...."
+                        android:fontFamily="sans-serif-light"
                         android:id="@+id/overlayBody"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:textColor="#FFF" />
+                        android:textColor="#FFF"
+                        android:autoLink="web"
+                        android:textColorLink="#F00"
+                        android:linksClickable="true" />
                 </LinearLayout>
             </ScrollView>
 

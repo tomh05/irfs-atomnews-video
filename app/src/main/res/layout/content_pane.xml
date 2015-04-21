@@ -12,7 +12,7 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="460dp">
+        android:layout_height="400dp">
 
         <TextureView
             android:layout_width="match_parent"
@@ -39,45 +39,102 @@
             android:id="@+id/pausedLayout"
             android:visibility="invisible">
 
-            <Button
+            <ImageButton
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:text="↻"
+                android:src="@mipmap/bbc_logo"
                 android:id="@+id/replayButton"
-                android:textSize="60dp"
-                android:background="@drawable/video_control_button_drawable"
+                android:background="#CC000000"
                 android:textColor="#CCC"
                 android:layout_margin="5dp" />
 
-            <Button
+            <ImageButton
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:text="►"
+                android:src="@mipmap/bbc_logo"
                 android:id="@+id/resumeButton"
-                android:textSize="60dp"
-                android:background="@drawable/video_control_button_drawable"
-                android:textColor="#CCC"
+                android:background="#CC000000"
                 android:layout_margin="5dp" />
         </LinearLayout>
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="100dp"
+            android:layout_height="140dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Hello here is some text that can be displayed on a line"
+            android:text="The documentary was controversial because it interviewed one of the convicted rapists in prison"
             android:id="@+id/captionView"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="3dp"
             android:background="#99000000"
-            android:textSize="30dp"
+            android:textSize="26dp"
             android:fontFamily="sans-serif-light"
             android:paddingBottom="3dp"
             android:textColorLink="#CC6666"
-            android:layout_marginTop="280dp"
-            android:textColor="#DDD" />
+            android:layout_marginTop="270dp"
+            android:textColor="#DDD"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentStart="false" />
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center_horizontal">
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="fill_parent"
+            android:text="&lt;"
+            android:id="@+id/prevCaption"
+            android:layout_alignTop="@+id/exploreDeeperLayout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textColor="#DDD"
+            android:background="#99000000" />
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:id="@+id/skip"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="10dp"
+                android:background="#99000000"
+            android:text="SKIP"
+                android:textSize="16dp"
+                android:paddingBottom="10dp"
+                android:textColorLink="#CC6666"
+            android:textColor="#DDD"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="50dp"
+            android:layout_height="fill_parent"
+            android:text="&gt;"
+            android:id="@+id/nextCaption"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="true"
+            android:textColor="#DDD"
+            android:layout_alignParentRight="true"
+            android:background="#99000000"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
+    <view
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        class="irfs.videonews1.VideoProgressBar"
+        android:id="@+id/videoProgressBar"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-2dp" />
 
 
     <LinearLayout
@@ -86,8 +143,7 @@
         android:layout_height="fill_parent"
         android:id="@+id/exploreDeeperLayout"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:visibility="invisible">
+        android:paddingRight="@dimen/activity_horizontal_margin">
 
     </LinearLayout>
 
