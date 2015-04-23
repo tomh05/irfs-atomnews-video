@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PorterDuff;
 import android.graphics.SurfaceTexture;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -26,7 +27,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.RelativeLayout;
@@ -62,10 +63,13 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
     Uri videoSource;
 
     Chapter chapter;
+    TextView skipView;
     Button nextCaptionButton, prevCaptionButton;
+    ImageView nextCaptionImage, prevCaptionImage;
+    RelativeLayout nextCaptionLayout, prevCaptionLayout;
     LinearLayout pausedLayout;
     Button pauseButton;
-    ImageButton resumeButton, replayButton;
+    Button resumeButton, replayButton;
     TextView captionView;
     LinearLayout exploreDeeperLayout;
     //TextView exploreDeeperHeader;
@@ -76,6 +80,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
     MainActivity parentActivity;
 
     private static int updateInterval = 60;
+    private String skipTextDivider = " of ";
 
 
     public int getChapID() {
@@ -104,7 +109,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-        mUpdatePercentListener = (UpdatePercentListener) activity;
+            mUpdatePercentListener = (UpdatePercentListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + " must implement UpdatePercentListener");
         }
@@ -132,7 +137,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
         // play/resume buttons
         pausedLayout = (LinearLayout) rootView.findViewById(R.id.pausedLayout);
-        resumeButton = (ImageButton) rootView.findViewById(R.id.resumeButton);
+        resumeButton = (Button) rootView.findViewById(R.id.resumeButton);
         resumeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,7 +145,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
             }
         });
 
-        replayButton = (ImageButton) rootView.findViewById(R.id.replayButton);
+        replayButton = (Button) rootView.findViewById(R.id.replayButton);
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,8 +186,8 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
                 if (m_isVisible) {
                     play();
                     if (chapID==0) {
-                        pause(); // don't autoplay first video, but still load video
-                        replayButton.setVisibility(View.GONE);
+                        //pause(); // don't autoplay first video, but still load video
+                        //replayButton.setVisibility(View.GONE);
                     }
                 }
 
@@ -207,7 +212,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
                 pauseButton.setVisibility(View.INVISIBLE);
                 //if (exploreDeeperLayout.getChildCount()>0) {
                 //    exploreDeeperLayout.setVisibility(View.VISIBLE);
-                    //exploreDeeperHeader.setVisibility(View.VISIBLE);
+                //exploreDeeperHeader.setVisibility(View.VISIBLE);
                 //}
                 parentActivity.notifyPaused();
             }
@@ -237,35 +242,45 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
         //set up caption skip buttons
         //if (!parentActivity.portrait) {
-            nextCaptionButton = (Button) rootView.findViewById(R.id.nextCaption);
-            nextCaptionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                   if (currentCaptionIndex < chapter.captions.size()-1) {
-                       // go to next caption
 
-                       goToCaption(currentCaptionIndex + 1);
-                   }
+        if (parentActivity.portrait) {
+            skipView = (TextView) rootView.findViewById(R.id.skipLabel);
+            skipView.setText("1" + skipTextDivider + chapter.captions.size());
+        }
+
+        //nextCaptionButton = (Button) rootView.findViewById(R.id.nextCaption);
+        nextCaptionImage = (ImageView) rootView.findViewById(R.id.nextCaption);
+        nextCaptionLayout = (RelativeLayout) rootView.findViewById(R.id.nextCaptionLayout);
+        nextCaptionLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentCaptionIndex < chapter.captions.size()-1) {
+                    // go to next caption
+
+                    goToCaption(currentCaptionIndex + 1);
                 }
-            });
-            prevCaptionButton = (Button) rootView.findViewById(R.id.prevCaption);
-            prevCaptionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (currentCaptionIndex > 0) {
-                        // go to previous caption
-                        goToCaption(currentCaptionIndex - 1);
-                    }
+            }
+        });
+        //prevCaptionButton = (Button) rootView.findViewById(R.id.prevCaption);
+        prevCaptionImage = (ImageView) rootView.findViewById(R.id.prevCaption);
+        prevCaptionLayout = (RelativeLayout) rootView.findViewById(R.id.prevCaptionLayout);
+        prevCaptionLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (currentCaptionIndex > 0) {
+                    // go to previous caption
+                    goToCaption(currentCaptionIndex - 1);
                 }
-            });
+            }
+        });
         //}
 
         //set up video progress bar
         //if (!parentActivity.portrait) {
-            videoProgressBar = (VideoProgressBar) rootView.findViewById(R.id.videoProgressBar);
-            int[] positions = new int[chapter.captions.size()];
-            for (int i =0;i<positions.length;i++) positions[i] = chapter.captions.get(i).start;
-            videoProgressBar.setCaptionPositions(positions);
+        videoProgressBar = (VideoProgressBar) rootView.findViewById(R.id.videoProgressBar);
+        int[] positions = new int[chapter.captions.size()];
+        for (int i =0;i<positions.length;i++) positions[i] = chapter.captions.get(i).start;
+        videoProgressBar.setCaptionPositions(positions);
         //}
 
 
@@ -275,40 +290,43 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
     private void addExploreDeeperButton(String storyTitle, int chap) {
         Button b = new Button(getActivity());
-            //Style the button. This all gets a bit nasty...
-            b.setText(storyTitle);
-            b.setTag(chap);
-            b.setAllCaps(false);
-        b.setBackgroundColor(Color.argb(40,0,0,0));
-            int p = 25;
-            b.setPadding(p,p,p,p);
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            int m = 20;
-            layoutParams.setMargins(m,m,m,m);
-            //b.setLayoutParams(layoutParams);
-            boolean isPresent = parentActivity.getTimelineModel().contains(chap);
-            b.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        //Style the button. This all gets a bit nasty...
+        b.setText(storyTitle);
+        b.setTag(chap);
+        b.setAllCaps(false);
+        b.setTextSize(20);
+        b.setTypeface(null, Typeface.NORMAL);
+        //b.setBackgroundColor(Color.argb(40,0,0,0));
+        //int p = 25;
+        //b.setPadding(p,p,p,p);
+        int defaultHeight= (int) (44 * getResources().getDisplayMetrics().scaledDensity); // was 48
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, defaultHeight);
+        int m = 20;
+        layoutParams.setMargins(m,m,m,m);
+        //b.setLayoutParams(layoutParams);
+        //b.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        boolean isPresent = parentActivity.getTimelineModel().contains(chap);
 
-            b.setEnabled(!isPresent);
-            if (isPresent) {
-                b.setTextColor(Color.rgb(200, 200, 200));
-                b.setBackgroundResource(R.drawable.explore_deeper_inactive_button_drawable);
-            } else {
-                b.setTextColor(Color.WHITE);
-                b.setBackgroundResource(R.drawable.explore_deeper_button_drawable);
+        b.setEnabled(!isPresent);
+        if (isPresent) {
+            b.setTextColor(Color.rgb(40, 40, 40));
+            b.setBackgroundResource(R.mipmap.btn_deeper_inactive);
+        } else {
+            b.setTextColor(Color.WHITE);
+            b.setBackgroundResource(R.mipmap.btn_deeper_active);
+        }
+
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int chapterToLaunch = (int) v.getTag();
+                Button b = (Button) v;
+                b.setTextColor(Color.rgb(40, 40, 40));
+                b.setBackgroundResource(R.mipmap.btn_deeper_inactive);
+                parentActivity.addTimelineElement(chapterToLaunch,chapID,true);
+                v.setEnabled(false);
             }
-
-            b.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int chapterToLaunch = (int) v.getTag();
-                    Button b = (Button) v;
-                    b.setTextColor(Color.rgb(200,200,200));
-                    b.setBackgroundResource(R.drawable.explore_deeper_inactive_button_drawable);
-                    parentActivity.addTimelineElement(chapterToLaunch,chapID,true);
-                    v.setEnabled(false);
-                }
-            });
+        });
         exploreButtons.add(b);
         exploreDeeperLayout.addView(b,layoutParams);
     }
@@ -319,7 +337,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         updateSurfaceTextureSize();
         Surface surface = new Surface(surfaceTexture);
         mp.setSurface(surface);
-        }
+    }
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {
@@ -369,6 +387,9 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         Log.d("caption","going from index " + currentCaptionIndex+ " to "+ index);
         int captionTime = chapter.captions.get(index).start;
 
+
+        resumeButton.setVisibility(View.VISIBLE);
+
         if (mp!=null) {
             //currentCaptionIndex = index;
 
@@ -380,6 +401,11 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
             currentCaptionIndex = index;
             calculatePercent();
             updateCaptionButtons();
+
+
+            if (parentActivity.portrait) {
+                skipView.setText((index + 1) + skipTextDivider + chapter.captions.size());
+            }
             setCaptionText(chapter.captions.get(index).body);
             //videoTimerHandler.removeCallbacksAndMessages(null);
             //videoTimerHandler.post(UpdateCaptions);
@@ -473,7 +499,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         pauseButton.setVisibility(View.INVISIBLE);
         //if (exploreDeeperLayout.getChildCount()>0) {
         //    exploreDeeperLayout.setVisibility(View.VISIBLE);
-            //exploreDeeperHeader.setVisibility(View.VISIBLE);
+        //exploreDeeperHeader.setVisibility(View.VISIBLE);
         //}
         /*
         playButton.setText("►");
@@ -513,6 +539,11 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
                         if (i != currentCaptionIndex) {
                             //Log.d("caption", "I picked index " + i + ", as pos inbetween " + chapter.captions.get(i).start + " and " + chapter.captions.get(i).end);
                             currentCaptionIndex = i;
+
+
+                            if (parentActivity.portrait) {
+                                skipView.setText((i + 1) + skipTextDivider + chapter.captions.size());
+                            }
                             setCaptionText(chapter.captions.get(i).body);
                             updateCaptionButtons();
                         }
@@ -532,9 +563,9 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         mUpdatePercentListener.updatePercent(chapID, percent);
 
         //if (!parentActivity.portrait) {
-            videoProgressBar = (VideoProgressBar) rootView.findViewById(R.id.videoProgressBar);
-            videoProgressBar.setDuration(mp.getDuration());
-            videoProgressBar.setPosition(mp.getCurrentPosition());
+        videoProgressBar = (VideoProgressBar) rootView.findViewById(R.id.videoProgressBar);
+        videoProgressBar.setDuration(mp.getDuration());
+        videoProgressBar.setPosition(mp.getCurrentPosition());
 
         //}
     }
@@ -543,17 +574,17 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
 
         //if (!parentActivity.portrait) {
-            if (currentCaptionIndex > 0) {
-                prevCaptionButton.setText("<");
-            } else {
-                prevCaptionButton.setText("");
-            }
+        if (currentCaptionIndex > 0) {
+            prevCaptionImage.setBackgroundResource(R.mipmap.skip_left_active);
+        } else {
+            prevCaptionImage.setBackgroundResource(R.mipmap.skip_left_inactive);
+        }
 
-            if (currentCaptionIndex < chapter.captions.size() - 1) {
-                nextCaptionButton.setText(">");
-            } else {
-                nextCaptionButton.setText("");
-            }
+        if (currentCaptionIndex < chapter.captions.size() - 1) {
+            nextCaptionImage.setBackgroundResource(R.mipmap.skip_right_active);
+        } else {
+            nextCaptionImage.setBackgroundResource(R.mipmap.skip_right_inactive);
+        }
 
         //}
     }

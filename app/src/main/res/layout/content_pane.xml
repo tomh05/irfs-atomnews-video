@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000">
@@ -12,16 +12,25 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="400dp">
+        android:layout_height="411dp"
+        android:id="@+id/videoRelativeLayout">
 
         <TextureView
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:id="@+id/videoView"
             android:background="#000" />
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/imageView2"
+            android:src="@mipmap/paris"
+            android:visibility="gone" />
+
         <Button
             android:layout_width="match_parent"
-            android:layout_height="280dp"
+            android:layout_height="fill_parent"
             android:text=""
             android:id="@+id/pauseButton"
             android:alpha="1"
@@ -32,99 +41,112 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="280dp"
+            android:layout_height="fill_parent"
             android:layout_alignParentBottom="false"
-            android:gravity="center_vertical|center_horizontal"
+            android:gravity="center_horizontal"
             android:background="#66000000"
             android:id="@+id/pausedLayout"
-            android:visibility="invisible">
+            android:visibility="invisible"
+            android:paddingTop="90dp">
 
-            <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@mipmap/bbc_logo"
+            <Button
+                android:layout_width="93dp"
+                android:layout_height="93dp"
                 android:id="@+id/replayButton"
-                android:background="#CC000000"
+                android:background="@mipmap/replay"
                 android:textColor="#CCC"
-                android:layout_margin="5dp" />
+                android:layout_margin="9dp" />
 
-            <ImageButton
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+            <Button
+                android:layout_width="93dp"
+                android:layout_height="93dp"
                 android:src="@mipmap/bbc_logo"
                 android:id="@+id/resumeButton"
-                android:background="#CC000000"
-                android:layout_margin="5dp" />
+                android:layout_margin="9dp"
+                android:background="@mipmap/play" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="140dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="The documentary was controversial because it interviewed one of the convicted rapists in prison"
-            android:id="@+id/captionView"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="3dp"
-            android:background="#99000000"
-            android:textSize="26dp"
-            android:fontFamily="sans-serif-light"
-            android:paddingBottom="3dp"
-            android:textColorLink="#CC6666"
-            android:layout_marginTop="270dp"
-            android:textColor="#DDD"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_alignParentEnd="false"
-            android:layout_alignParentStart="false" />
-
     </RelativeLayout>
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="411dp"
+        android:id="@+id/imageView3"
+        android:layout_alignParentBottom="true"
+        android:background="@mipmap/gradient" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="140dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:text="The documentary was controversial because it interviewed one of the convicted rapists in prison"
+        android:id="@+id/captionView"
+        android:paddingLeft="45dp"
+        android:paddingRight="45dp"
+        android:lineSpacingMultiplier="1.1"
+        android:textSize="26dp"
+        android:fontFamily="sans-serif-light"
+        android:textColorLink="#A00000"
+        android:layout_marginTop="300dp"
+        android:textColor="#DDD"
+        android:maxLines="4"
+        android:textIsSelectable="false" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="center_horizontal">
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="false"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@+id/captionView"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/skipLinearLayout">
 
-        <Button
-            android:layout_width="50dp"
+        <RelativeLayout
+            android:layout_width="100dp"
             android:layout_height="fill_parent"
-            android:text="&lt;"
-            android:id="@+id/prevCaption"
-            android:layout_alignTop="@+id/exploreDeeperLayout"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textColor="#DDD"
-            android:background="#99000000" />
+            android:clickable="true"
+            android:id="@+id/prevCaptionLayout">
+
+            <ImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:id="@+id/prevCaption"
+                android:layout_alignParentLeft="false"
+                android:background="@mipmap/skip_left_inactive"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="15dp" />
+        </RelativeLayout>
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="fill_parent"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:id="@+id/skip"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="10dp"
-                android:background="#99000000"
-            android:text="SKIP"
-                android:textSize="16dp"
-                android:paddingBottom="10dp"
-                android:textColorLink="#CC6666"
+            android:id="@+id/skipLabel"
+            android:text="1/1"
+                android:textSize="14dp"
+            android:textColorLink="#CC6666"
             android:textColor="#DDD"
-            android:layout_weight="1" />
+            android:gravity="center_vertical|center_horizontal" />
 
-        <Button
-            android:layout_width="50dp"
+
+        <RelativeLayout
+            android:layout_width="100dp"
             android:layout_height="fill_parent"
-            android:text="&gt;"
-            android:id="@+id/nextCaption"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentStart="true"
-            android:textColor="#DDD"
-            android:layout_alignParentRight="true"
-            android:background="#99000000"
-            android:visibility="visible" />
+            android:clickable="true"
+            android:id="@+id/nextCaptionLayout">
+
+            <ImageView
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:id="@+id/nextCaption"
+                android:layout_alignParentLeft="true"
+                android:background="@mipmap/skip_right_inactive"
+                android:layout_centerVertical="true"
+                android:layout_margin="15dp" />
+        </RelativeLayout>
+
 
     </LinearLayout>
 
@@ -133,8 +155,7 @@
         android:layout_height="3dp"
         class="irfs.videonews1.VideoProgressBar"
         android:id="@+id/videoProgressBar"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-2dp" />
+        android:layout_below="@+id/skipLinearLayout" />
 
 
     <LinearLayout
@@ -143,8 +164,10 @@
         android:layout_height="fill_parent"
         android:id="@+id/exploreDeeperLayout"
         android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="30dp"
+        android:layout_below="@+id/videoProgressBar">
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
