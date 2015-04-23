@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -259,14 +260,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
 
     }
 
-    @Override
-    public void onBackPressed() {
-        if (mPager.getCurrentItem() == 0) {
-            super.onBackPressed();
-        } else {
-            goToPage(mPager.getCurrentItem()-1);
-        }
-    }
+
 
     public void goToPage(int i)
     {
@@ -312,12 +306,52 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
             public void onClick(View v) {
                 LinearLayout overlayLayout = (LinearLayout) findViewById(R.id.overlayLayout);
                 overlayLayout.setVisibility(View.INVISIBLE);
+                //resume fragment
+                // problem: how do I know which fragment is currently available?
+                //ContentPane c = (ContentPane) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.content_pager + ":" + mPager.getCurrentItem());
+
+                List<Fragment> fragments = getSupportFragmentManager().getFragments();
+                for (int i = 0; i < fragments.size(); i++) {
+                    ContentPane pane = (ContentPane) fragments.get(i);
+                    if (pane != null) {
+                        if (pane.pausedForOverlay) {
+                            pane.pausedForOverlay = false;
+                            pane.play();
+                        }
+                    }
+                }
             }
         });
 
         overlayLayout.setVisibility(View.VISIBLE);
 
     }
+
+    @Override
+    public void onBackPressed(){
+        LinearLayout overlayLayout = (LinearLayout) findViewById(R.id.overlayLayout);
+        if (overlayLayout.getVisibility() == View.VISIBLE) {
+            overlayLayout.setVisibility(View.INVISIBLE);
+                //resume fragment
+
+                List<Fragment> fragments = getSupportFragmentManager().getFragments();
+                for (int i = 0; i < fragments.size(); i++) {
+                    ContentPane pane = (ContentPane) fragments.get(i);
+                    if (pane != null) {
+                        if (pane.pausedForOverlay) {
+                            pane.pausedForOverlay = false;
+                            pane.play();
+                        }
+                    }
+                }
+
+        } else if (mPager.getCurrentItem() == 0) {
+            super.onBackPressed();
+        } else {
+            goToPage(mPager.getCurrentItem()-1);
+        }
+    }
+
 
     private class ContentPagerAdapter extends FragmentStatePagerAdapter {
         public ContentPagerAdapter(FragmentManager fm) {

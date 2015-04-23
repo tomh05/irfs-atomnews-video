@@ -37,9 +37,14 @@
     {"start":"13160","end":"19000","body":"Critics say the documentary gives an unfair impression of Indian men."  }
     ], 
     "links":[]},
-{"start":"121000","end":"148000","title":"Rapist Interview","hasAudio":true, "captions":[
-    {"start":"0","end":"27000","body":"(This clip contains audio)"  }
-    ], 
+{"start":"121000","end":"27000","title":"Rapist Interview","hasAudio":true, "captions":[
+    {"start":"0","end":"4080","body":"“You can't clap with one hand. It takes two hands to clap."  },
+    {"start":"4080","end":"7640","body":"“A decent girl won't roam around at 9 o'clock at night."  },
+    {"start":"7640","end":"15280","body":"“A girl is far more responsible for rape than a boy."  },
+    {"start":"15280","end":"19000","body":"“When being raped, she shouldn't fight back."  },
+    {"start":"19000","end":"22000","body":"“She should just be silent and allow the rape."  },
+    {"start":"22000","end":"27000","body":"“Then they'd have dropped her off after doing her, and only hit the boy.”"  }
+    ],
     "links":[]},
 {"start":"0","end":"0","title":"Vox Pops","hasAudio":true, "captions":[
     {"start":"0","end":"27000","body":"(This clip contains audio)"  }

@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
@@ -52,6 +53,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
     private SurfaceView mSurfaceView;
     private TextureView mVideoView;
     private SurfaceHolder holder;
+    public boolean pausedForOverlay = false;
     boolean m_isVisible = false;
     int currentCaptionIndex = -1;
     boolean seeking = false;
@@ -215,6 +217,8 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
                 //exploreDeeperHeader.setVisibility(View.VISIBLE);
                 //}
                 parentActivity.notifyPaused();
+                mUpdatePercentListener.updatePercent(chapID, 100f);
+
             }
         });
 
@@ -562,12 +566,10 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         float percent = 100.0f * (float) mp.getCurrentPosition()/ (float )mp.getDuration();
         mUpdatePercentListener.updatePercent(chapID, percent);
 
-        //if (!parentActivity.portrait) {
         videoProgressBar = (VideoProgressBar) rootView.findViewById(R.id.videoProgressBar);
         videoProgressBar.setDuration(mp.getDuration());
         videoProgressBar.setPosition(mp.getCurrentPosition());
 
-        //}
     }
 
     private void updateCaptionButtons() {
@@ -604,11 +606,14 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         int start = stringBuilder.getSpanStart(span);
         int end = stringBuilder.getSpanEnd(span);
         int flags = stringBuilder.getSpanFlags(span);
-        ClickableSpan clickable = new ClickableSpan() {
+        ClickableSpanNoUnderline clickable = new ClickableSpanNoUnderline() {
             @Override
             public void onClick(View v) {
                 // Do something
-                pause();
+                if (mp.isPlaying()) {
+                    pausedForOverlay = true;
+                    pause();
+                }
                 parentActivity.showOverlay(span.getURL());
             }
         };
@@ -616,6 +621,22 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         stringBuilder.setSpan(clickable,start,end,flags);
         stringBuilder.removeSpan(span);
 
+
+    }
+
+    private class ClickableSpanNoUnderline extends ClickableSpan {
+        public ClickableSpanNoUnderline() {
+            super();
+        }
+        @Override
+        public void onClick(View widget) {
+        }
+
+        @Override
+        public void updateDrawState(TextPaint ds) {
+            super.updateDrawState(ds);
+            ds.setUnderlineText(false);
+        }
 
     }
 

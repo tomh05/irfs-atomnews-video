@@ -24,10 +24,12 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/timelineLayout"
-            android:paddingRight="100dp">
+            android:paddingRight="300dp">
 
         </LinearLayout>
     </HorizontalScrollView>
+
+
 
 
     <LinearLayout
@@ -53,9 +55,11 @@
             <Button
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:text="×"
                 android:id="@+id/overlayClose"
-                android:layout_gravity="right" />
+                android:layout_gravity="right"
+                android:background="@mipmap/close"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp" />
 
             <ScrollView
                 android:layout_width="fill_parent"
@@ -72,12 +76,14 @@
                         android:layout_height="wrap_content"
                         android:text="OverlayTitle"
                         android:id="@+id/overlayTitle"
-                        android:textSize="24dp"
+                        android:textSize="28dp"
                         android:fontFamily="sans-serif-light"
                         android:paddingBottom="10dp"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:textColor="#FFF" />
+                        android:textColor="#FFF"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp" />
 
                     <TextView
                         android:layout_width="fill_parent"
@@ -88,13 +94,18 @@
                         android:id="@+id/overlayBody"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:textColor="#FFF" />
+                        android:textColor="#FFF"
+                        android:autoLink="web"
+                        android:textColorLink="#F00"
+                        android:linksClickable="true"
+                        android:lineSpacingMultiplier="1.1"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp" />
                 </LinearLayout>
             </ScrollView>
 
         </LinearLayout>
 
     </LinearLayout>
-
 
 </RelativeLayout>

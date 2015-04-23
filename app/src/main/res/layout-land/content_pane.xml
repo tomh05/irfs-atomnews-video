@@ -57,7 +57,7 @@
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="160dp"
+        android:layout_height="150dp"
         android:id="@+id/imageView3"
         android:layout_alignParentBottom="true"
         android:background="@mipmap/gradient_landscape" />
@@ -91,12 +91,14 @@
                 android:layout_height="fill_parent"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:id="@+id/captionView"
+            android:textColorLink="#CC0000"
             android:paddingTop="10dp"
                 android:textSize="24dp"
             android:fontFamily="sans-serif-light"
                 android:paddingBottom="10dp"
-                android:textColorLink="#CC6666"
             android:textColor="#DDD"
+            android:lineSpacingMultiplier="1.2"
+            android:maxLines="2"
             android:layout_weight="1" />
 
 
@@ -135,7 +137,7 @@
             android:id="@+id/exploreDeeperLayout"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="70dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="false"
         android:layout_alignParentLeft="false"
@@ -144,17 +146,6 @@
         android:gravity="right">
 
     </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Explore Deeper:"
-        android:id="@+id/exploreDeeperHeader"
-        android:textColor="#FFF"
-        android:visibility="invisible"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="60dp"
-        android:layout_marginRight="20dp" />
 
 </RelativeLayout>
 
