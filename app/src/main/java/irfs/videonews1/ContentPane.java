@@ -3,10 +3,8 @@ package irfs.videonews1;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.graphics.PorterDuff;
 import android.graphics.SurfaceTexture;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,10 +25,8 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -59,6 +55,8 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
     boolean seeking = false;
     boolean timeSlip = false; // make captions not align to video, when seeking jumps to wrong place
 
+    int playFrom = 0;
+
     private Handler videoTimerHandler = new Handler();
 
     ViewGroup rootView;
@@ -83,6 +81,8 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
     private static int updateInterval = 60;
     private String skipTextDivider = " of ";
+    boolean autoPlay = true;
+    boolean saveAutoPlay = true;
 
 
     public int getChapID() {
@@ -180,13 +180,31 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
         videoSource = Uri.parse(args.getString("uriString"));
 
+        if (savedInstanceState != null) {
+            Log.d("fragment","recovered position: "+savedInstanceState.getInt("position"));
+            playFrom = savedInstanceState.getInt("position");
+
+            autoPlay = savedInstanceState.getBoolean("isPlaying");
+            Log.d("fragment","recovered autoplay:" + autoPlay);
+        }
+
+
+
         mp = new MediaPlayer();
         mp.setVolume(0, 0);
         mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 if (m_isVisible) {
-                    play();
+                    mp.seekTo(playFrom);
+
+                    if (autoPlay) {
+                        Log.d("res","I am going to play");
+                        play();
+                    } else {
+                        Log.d("res","I am going to pause");
+                        pause();
+                    }
                     if (chapID==0) {
                         //pause(); // don't autoplay first video, but still load video
                         //replayButton.setVisibility(View.GONE);
@@ -195,6 +213,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
 
             }
         });
+
 
         mp.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
             @Override
@@ -216,6 +235,7 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
                 //    exploreDeeperLayout.setVisibility(View.VISIBLE);
                 //exploreDeeperHeader.setVisibility(View.VISIBLE);
                 //}
+                saveAutoPlay = false;
                 parentActivity.notifyPaused();
                 mUpdatePercentListener.updatePercent(chapID, 100f);
 
@@ -428,8 +448,17 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         if (isVisibleToUser && ! m_isVisible) {
             // it transitioned invisible -> visible
 
+
             if (mp != null) {
+                /*if (autoPlay) {
+                    play();
+                } else {
+                    pause();
+                }*/
+                Log.d("uservisible","became visible, autoplay " + autoPlay);
                 play();
+                //if(!autoPlay) pause();
+
             }
 
         } else if (!isVisibleToUser && m_isVisible) {
@@ -485,9 +514,14 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         //exploreDeeperLayout.setVisibility(View.INVISIBLE);
         //exploreDeeperHeader.setVisibility(View.INVISIBLE);
 
-        mp.start();
+        if (!mp.isPlaying()) {
+            mp.start();
+        }
+
         videoTimerHandler.postDelayed(UpdateCaptions, updateInterval);
         parentActivity.notifyPlaying();
+
+        saveAutoPlay = true;
 
         //if (!parentActivity.portrait) {
         //    exploreDeeperLayout.setVisibility(View.INVISIBLE);
@@ -511,8 +545,11 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         playButton.setEnabled(true);
         playButton.setAlpha(1);
         */
-        mp.pause();
+        if (mp.isPlaying()) {
+            mp.pause();
+        }
 
+        saveAutoPlay = false;
         parentActivity.notifyPaused();
         //if (!parentActivity.portrait) {
         //    exploreDeeperLayout.setVisibility(View.VISIBLE);
@@ -641,12 +678,28 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
     }
 
     @Override
+    public void onPause() {
+        Log.d("fragment","pausing");
+        if (mp.isPlaying()) {
+            pause();
+            saveAutoPlay = true;
+        }
+        super.onPause();
+    }
+
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("isPlaying",mp.isPlaying());
+        Log.d("fragment","saving with autoplay state: " + saveAutoPlay);
+
+        outState.putBoolean("isPlaying",saveAutoPlay);
         outState.putInt("position", mp.getCurrentPosition());
 
+        super.onSaveInstanceState(outState);
+
     }
+
+
     @Override
     public void onDestroyView() {
 

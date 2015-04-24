@@ -1,10 +1,8 @@
 package irfs.videonews1;
 
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -13,35 +11,22 @@ import android.support.v4.app.Fragment;
 
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
-import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class MainActivity extends FragmentActivity implements ContentPane.UpdatePercentListener {
@@ -78,6 +63,8 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
     public boolean portrait;
     private Story story;
 
+    String currentOverlay = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,10 +77,8 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
        Intent intent = getIntent();
        articleName = intent.getStringExtra("name");
 
-        Log.d("MainActivity","Loading Story...");
         StoryLoader storyLoader = new StoryLoader(this);
         story = storyLoader.loadStoryFromLocalJSON(articleName);
-        Log.d("MainActivity","Survived...");
 
 
         //if (portrait) {
@@ -104,16 +89,23 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         timelineLayout = (LinearLayout) findViewById(R.id.timelineLayout);
         timelineScrollView = (HorizontalScrollView) findViewById(R.id.timelineScrollView);
 
-        // Reload timeline from model if there is one
+
+
         if (savedInstanceState != null) {
+            // Resume overlay if there is one
+            if (savedInstanceState.getString("currentOverlay") != "") {
+                showOverlay(savedInstanceState.getString("currentOverlay"));
+            }
+
+
+                // Reload timeline from model if there is one
         ArrayList<Integer> savedTimelineModel =  savedInstanceState.getIntegerArrayList("timelineModel");
             for (int k = 0; k < savedTimelineModel.size(); k++) {
                 addTimelineElement(savedTimelineModel.get(k), -1, false);
             }
-            //timelineElements.get(0).setActive(true);
+            timelineElements.get(0).setActive(true);
             //int position = savedInstanceState.getInt("lastPosition");
             //float scrollLoc = timelineElements.get(position).getX() - 50;
-            //Log.d("rest", "I am restoring position " + position + ", SCROLL TO " + scrollLoc);
             //timelineScrollView.smoothScrollTo((int) scrollLoc,0);
         } else {
             //populate timeline
@@ -152,6 +144,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
 
         super.onSaveInstanceState(outState);
         outState.putIntegerArrayList("timelineModel",timelineModel);
+        outState.putString("currentOverlay",currentOverlay);
         //outState.putInt("lastPosition",lastPosition);
     }
 
@@ -180,7 +173,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
             }
             if (lastPosition != position && positionOffset==0.0) {
 
-                Log.d("pos","last pos was "+lastPosition+", current "+position);
+                //Log.d("pos","last pos was "+lastPosition+", current "+position);
                 timelineElements.get(lastPosition).setActive(false);
                 timelineElements.get(lastPosition).setPercent(0);
                 lastPosition = position;
@@ -191,7 +184,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
                     public void run() {
 
                         float scrollLoc = timelineElements.get(lastPosition).getX() - 50;
-                        Log.d("autoscroll","auto scrolled to " + scrollLoc);
+                        //Log.d("autoscroll","auto scrolled to " + scrollLoc);
                         timelineScrollView.smoothScrollTo((int) scrollLoc,0);
                     }
                 });
@@ -214,7 +207,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         int position = timelineModel.indexOf(afterChapterID);
         position ++;
         if (position <= 0) position = timelineModel.size();
-        Log.d("addTimelineElement","chapterID "+chapterID+" after "+afterChapterID);
+        //Log.d("addTimelineElement","chapterID "+chapterID+" after "+afterChapterID);
 
         TimelineElement newEl = new TimelineElement(this,chapterID);
         newEl.setTag(chapterID);
@@ -255,7 +248,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
             mPagerAdapter.notifyDataSetChanged();
         }
         timelineElements.add(position,newEl);
-        Log.d("addTimelineElement","timelineModel is now "+timelineModel);
+        //Log.d("addTimelineElement","timelineModel is now "+timelineModel);
 
 
     }
@@ -298,6 +291,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         Button overlayCloseButton = (Button) findViewById(R.id.overlayClose);
         String overlayBodyText = (String)  story.extras.get(id);
 
+        currentOverlay = id;
         overlayTitleView.setText(id);
         overlayBodyView.setText(overlayBodyText);
 
@@ -306,6 +300,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
             public void onClick(View v) {
                 LinearLayout overlayLayout = (LinearLayout) findViewById(R.id.overlayLayout);
                 overlayLayout.setVisibility(View.INVISIBLE);
+                currentOverlay="";
                 //resume fragment
                 // problem: how do I know which fragment is currently available?
                 //ContentPane c = (ContentPane) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.content_pager + ":" + mPager.getCurrentItem());
@@ -361,33 +356,6 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         public Fragment getItem(int position) {
 
             int chapID = timelineModel.get(position);
-            //Fragment fragment = new ContentPane();
-            //Bundle args = new Bundle();
-            /*
-            String uri = "";
-            if (chapID ==0) {
-                uri = "android.resource://" + getPackageName() + "/" + R.raw.india1;
-            } else if (chapID ==1) {
-                uri = "android.resource://" + getPackageName() + "/" + R.raw.india2;
-            } else if (chapID ==2) {
-                uri = "android.resource://" + getPackageName() + "/" + R.raw.india3;
-            } else if (chapID ==3) {
-                uri = "android.resource://" + getPackageName() + "/" + R.raw.india4;
-            } else if (chapID ==4) {
-                uri = "android.resource://" + getPackageName() + "/" + R.raw.india5;
-            } else if (chapID == 5) {
-                uri = "android.resource://" + getPackageName() + "/" + R.raw.india6;
-            } else {
-                uri = "android.resource://" + getPackageName() + "/" + R.raw.india7;
-
-            }
-            /*
-            args.putString("uri", uri);
-            args.putInt("chapID",chapID);
-            args.putSerializable("chapter",story.chapters.get(chapID));
-            fragment.setArguments(args);
-            fragment.setUserVisibleHint(true);
-            */
 
             String uri = "android.resource://" + getPackageName() + "/" + getResources().getIdentifier(articleName + chapID,"raw",getPackageName());
             ContentPane contentPane = ContentPane.newInstance(position, uri, chapID, story.chapters.get(chapID));
@@ -402,7 +370,7 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
 
         @Override
         public int getItemPosition(Object object) {
-            // We only wnat items to be refreshed if needed - i.e. they're to the right of the current item
+            // We only want items to be refreshed if needed - i.e. they're to the right of the current item
             ContentPane f = (ContentPane) object;
             int chapID = f.getChapID();
 

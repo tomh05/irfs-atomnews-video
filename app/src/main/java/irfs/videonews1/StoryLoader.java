@@ -30,7 +30,6 @@ public class StoryLoader {
 
     public Story loadStoryFromLocalJSON(String articleName) {
 
-        Log.d("this",articleName);
     int resID = this.context.getResources().getIdentifier("content_"+articleName,"raw",this.context.getPackageName());
     InputStream is = this.context.getResources().openRawResource(resID);
         byte[] buffer;
@@ -77,7 +76,7 @@ public class StoryLoader {
                 chapter.links = new ArrayList<Integer>();
 
                 for (int k=0; k<jsonLinks.length(); k++) {
-                    Log.d("loader","making link " + k +" and " + jsonLinks.get(k));
+                    //Log.d("loader","making link " + k +" and " + jsonLinks.get(k));
                     chapter.links.add((Integer) jsonLinks.get(k));
                 }
 
