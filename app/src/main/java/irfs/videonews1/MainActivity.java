@@ -229,6 +229,10 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         });
 
         if (animate) {
+            // scroll to ensure we can see the animation
+            float scrollLoc = timelineElements.get(lastPosition).getX() - 50;
+            timelineScrollView.smoothScrollTo((int) scrollLoc,0);
+
             ObjectAnimator anim = ObjectAnimator.ofFloat(newEl,"interp",0f,1f);
             anim.setDuration(2000);
             anim.start();

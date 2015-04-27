@@ -323,9 +323,19 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         //b.setBackgroundColor(Color.argb(40,0,0,0));
         //int p = 25;
         //b.setPadding(p,p,p,p);
-        int defaultHeight= (int) (44 * getResources().getDisplayMetrics().scaledDensity); // was 48
+
+        int defaultHeight, m;
+        if (rootView.getTag()=="large_size") {
+            defaultHeight= (int) (44 * getResources().getDisplayMetrics().scaledDensity); // was 48
+            m = 20;
+            b.setTextSize(20);
+        } else {
+            defaultHeight= (int) (39 * getResources().getDisplayMetrics().scaledDensity); // was 48
+            m = 18;
+            b.setTextSize(18);
+        }
+
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, defaultHeight);
-        int m = 20;
         layoutParams.setMargins(m,m,m,m);
         //b.setLayoutParams(layoutParams);
         //b.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));

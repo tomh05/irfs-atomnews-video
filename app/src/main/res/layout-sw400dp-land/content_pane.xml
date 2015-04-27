@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:tag="normal_size">
+    android:tag="large_size">
 
 
     <RelativeLayout
@@ -22,7 +22,7 @@
                 android:text=""
                 android:id="@+id/pauseButton"
                 android:alpha="1"
-                android:textSize="80dp"
+                android:textSize="90dp"
                 android:textColor="#FFFFFFFF"
                 android:background="#00000000" />
 
@@ -35,22 +35,22 @@
             android:background="#66000000"
             android:id="@+id/pausedLayout"
             android:visibility="invisible"
-            android:paddingTop="80dp">
+            android:paddingTop="90dp">
 
             <Button
-                android:layout_width="81dp"
-                android:layout_height="81dp"
+                android:layout_width="93dp"
+                android:layout_height="93dp"
                 android:id="@+id/replayButton"
                 android:background="@mipmap/replay"
                 android:textColor="#CCC"
-                android:layout_margin="8dp" />
+                android:layout_margin="9dp" />
 
             <Button
-                android:layout_width="81dp"
-                android:layout_height="81dp"
+                android:layout_width="93dp"
+                android:layout_height="93dp"
                 android:src="@mipmap/bbc_logo"
                 android:id="@+id/resumeButton"
-                android:layout_margin="8dp"
+                android:layout_margin="9dp"
                 android:background="@mipmap/play" />
         </LinearLayout>
 
@@ -66,22 +66,22 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="88dp"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true">
 
 
         <RelativeLayout
-            android:layout_width="44dp"
+            android:layout_width="50dp"
             android:layout_height="fill_parent"
             android:clickable="true"
             android:id="@+id/prevCaptionLayout">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
                 android:id="@+id/prevCaption"
                 android:background="@mipmap/skip_left_inactive"
-                android:layout_margin="13dp"
+                android:layout_margin="15dp"
                 android:layout_centerInParent="true" />
         </RelativeLayout>
 
@@ -94,9 +94,9 @@
             android:id="@+id/captionView"
             android:textColorLink="#CC0000"
             android:paddingTop="10dp"
-                android:textSize="21dp"
+                android:textSize="24dp"
             android:fontFamily="sans-serif-light"
-                android:paddingBottom="9dp"
+                android:paddingBottom="10dp"
             android:textColor="#DDD"
             android:lineSpacingMultiplier="1.2"
             android:maxLines="2"
@@ -106,17 +106,17 @@
 
 
         <RelativeLayout
-            android:layout_width="44dp"
+            android:layout_width="50dp"
             android:layout_height="fill_parent"
             android:clickable="true"
             android:id="@+id/nextCaptionLayout">
 
             <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
                 android:id="@+id/nextCaption"
                 android:background="@mipmap/skip_right_inactive"
-                android:layout_margin="13dp"
+                android:layout_margin="15dp"
                 android:layout_centerInParent="true" />
         </RelativeLayout>
 
@@ -126,11 +126,11 @@
 
     <view
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="5dp"
         class="irfs.videonews1.VideoProgressBar"
         android:id="@+id/videoProgressBar"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="0dp" />
+        android:layout_marginBottom="-2dp" />
 
     <LinearLayout
             android:orientation="vertical"
@@ -139,7 +139,7 @@
             android:id="@+id/exploreDeeperLayout"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="61dp"
+            android:layout_marginTop="70dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="false"
         android:layout_alignParentLeft="false"

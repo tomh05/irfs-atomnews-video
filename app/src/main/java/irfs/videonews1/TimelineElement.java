@@ -27,6 +27,7 @@ public class TimelineElement extends RelativeLayout {
     TextView textView;
     float textWidth = 0f;
     int hPadding = 20;
+    int defaultHeight;
 
     int foregroundColor = Color.rgb(180,0,1);
     int backgroundColor = Color.rgb(154,154,154);
@@ -39,20 +40,16 @@ public class TimelineElement extends RelativeLayout {
 
     // This is a messy workaround - we don't know what the final size of the textview should be...
     public void setInterp(float _interp) {
-        //this.width = width;
-        //setMeasuredDimension((int) ((float) getMeasuredWidth()* width),getMeasuredHeight());
-        //width = getWidth() * _width;
-        // capture maximum width from autosize
-        //if (textView.getWidth() > fullTextWidth) fullTextWidth = textView.getWidth();
-        //Log.d("timeel","measured width"+fullTextWidth);
-        //textView.setWidth((int) (fullTextWidth*_width) );
 
         float widthInterp = _interp/0.3f;
         if (widthInterp>1f) widthInterp = 1f;
         int newWidth = (int) (textWidth * (widthInterp));
-        //textView.setWidth(newWidth);
-
-        int height= (int) (48 * getResources().getDisplayMetrics().scaledDensity);
+        int height;
+        if (getRootView().getTag()=="large_size") {
+           height= (int) (48 * getContext().getResources().getDisplayMetrics().scaledDensity);
+        } else {
+            height= (int) (39 * getContext().getResources().getDisplayMetrics().scaledDensity);
+        }
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(newWidth,height);
         p.rightMargin = 4;
         setLayoutParams(p);
@@ -67,7 +64,6 @@ public class TimelineElement extends RelativeLayout {
         int b = 15  + (int) ((float)(154-15) * colorInterp);
         backgroundColor = Color.rgb(r,g,b);
         invalidate();
-        //rebuildPath();
     }
 
     public TimelineElement (Context context, AttributeSet attrs) {
@@ -88,7 +84,18 @@ public class TimelineElement extends RelativeLayout {
         setWillNotDraw(false);
 
 
-        int defaultHeight= (int) (48 * getContext().getResources().getDisplayMetrics().scaledDensity);
+        if (getRootView().getTag()=="large_size") {
+
+           defaultHeight= (int) (48 * getContext().getResources().getDisplayMetrics().scaledDensity);
+            hPadding = 20;
+            mTextSize = 20;
+        } else {
+
+            defaultHeight= (int) (39 * getContext().getResources().getDisplayMetrics().scaledDensity);
+            hPadding = 18;
+            mTextSize = 18;
+        }
+
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, defaultHeight);
         p.rightMargin = 4;
         setLayoutParams(p);
@@ -98,7 +105,7 @@ public class TimelineElement extends RelativeLayout {
         textView.setVisibility(View.VISIBLE);
         textView.setBackgroundColor(Color.TRANSPARENT);
         //textView.setHeight(120);
-        textView.setPadding(hPadding,20,hPadding,40); //extra space at bottom for arrow.
+        textView.setPadding(hPadding,hPadding,hPadding,2*hPadding); //extra space at bottom for arrow.
         textView.setTextColor(Color.WHITE);
         textView.setTextSize(mTextSize);
         textView.setSingleLine();
@@ -145,7 +152,7 @@ public class TimelineElement extends RelativeLayout {
     private void rebuildPath() {
         int w = getWidth();
         int h = getHeight();
-        int arrowSize = 20;
+        int arrowSize = hPadding;
         bubblePath = new Path();
         bubblePath.lineTo(w,0);
         bubblePath.lineTo(w,h-arrowSize);
@@ -166,13 +173,7 @@ public class TimelineElement extends RelativeLayout {
         //getAlpha();
         canvas.save();
         //paint.setColor(Color.BLUE);
-        //canvas.drawRect(0,0,canvas.getWidth(),80,paint);
-        //canvas.clipPath(bubblePath, Region.Op.UNION); // doesnt clip anything
-        //canvas.clipPath(bubblePath, Region.Op.INTERSECT); // makes top dissapear
-        //canvas.clipPath(bubblePath, Region.Op.REVERSE_DIFFERENCE); // draws no background
-        //canvas.clipPath(bubblePath, Region.Op.XOR); // draws top and bottom but not middle bit. Once faded, only draws outside
-        //canvas.clipPath(bubblePath, Region.Op.REPLACE); // makes top dissapear
-        //canvas.clipPath(bubblePath, Region.Op.DIFFERENCE); //draws top and bottom but not middle. Once faded, only draws bottom
+
         canvas.clipPath(bubblePath);
 
         //canvas.drawColor(Color.rgb(200,100,100));
@@ -200,7 +201,11 @@ public class TimelineElement extends RelativeLayout {
 
         //setMeasuredDimension(300,200);
         int defaultWidth = (int) textWidth;
-        int defaultHeight= (int) (48 * getContext().getResources().getDisplayMetrics().scaledDensity);
+        if (getRootView().getTag()=="large_size") {
+           defaultHeight= (int) (48 * getContext().getResources().getDisplayMetrics().scaledDensity);
+        } else {
+            defaultHeight= (int) (39 * getContext().getResources().getDisplayMetrics().scaledDensity);
+        }
 
         int width, height;
 
