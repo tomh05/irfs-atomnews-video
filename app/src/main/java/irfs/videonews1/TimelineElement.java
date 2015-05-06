@@ -48,7 +48,7 @@ public class TimelineElement extends RelativeLayout {
         if (getRootView().getTag()=="large_size") {
            height= (int) (48 * getContext().getResources().getDisplayMetrics().scaledDensity);
         } else {
-            height= (int) (39 * getContext().getResources().getDisplayMetrics().scaledDensity);
+            height= (int) (42 * getContext().getResources().getDisplayMetrics().scaledDensity);
         }
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(newWidth,height);
         p.rightMargin = 4;
@@ -91,7 +91,7 @@ public class TimelineElement extends RelativeLayout {
             mTextSize = 20;
         } else {
 
-            defaultHeight= (int) (39 * getContext().getResources().getDisplayMetrics().scaledDensity);
+            defaultHeight= (int) (42 * getContext().getResources().getDisplayMetrics().scaledDensity);
             hPadding = 18;
             mTextSize = 18;
         }
@@ -204,7 +204,7 @@ public class TimelineElement extends RelativeLayout {
         if (getRootView().getTag()=="large_size") {
            defaultHeight= (int) (48 * getContext().getResources().getDisplayMetrics().scaledDensity);
         } else {
-            defaultHeight= (int) (39 * getContext().getResources().getDisplayMetrics().scaledDensity);
+            defaultHeight= (int) (42 * getContext().getResources().getDisplayMetrics().scaledDensity);
         }
 
         int width, height;
