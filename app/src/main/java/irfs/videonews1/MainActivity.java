@@ -122,21 +122,6 @@ public class MainActivity extends FragmentActivity implements ContentPane.Update
         mPager.setOnPageChangeListener(pageChangeListener);
 
 
-
-        //if (portrait) {
-        // home button
-        //Button homeButton = (Button) findViewById(R.id.homeButton);
-        //homeButton.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View v) {
-        //        goHome();
-        //    }
-        //});
-
-        //} else {
-            //hideTimeline();
-        //}
-
     }
 
     @Override

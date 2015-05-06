@@ -325,11 +325,15 @@ public class ContentPane extends Fragment implements TextureView.SurfaceTextureL
         //b.setPadding(p,p,p,p);
 
         int defaultHeight, m;
-        if (rootView.getTag()=="large_size") {
+        RelativeLayout contentPaneLayout = (RelativeLayout) rootView.findViewById(R.id.content_pane);
+        Log.d("contentpane","tag is "+ contentPaneLayout.getTag());
+        if (contentPaneLayout.getTag().equals("large")) {
+            Log.d("contentpane","large size");
             defaultHeight= (int) (44 * getResources().getDisplayMetrics().scaledDensity); // was 48
             m = 20;
             b.setTextSize(20);
         } else {
+            Log.d("contentpane","normal size");
             defaultHeight= (int) (39 * getResources().getDisplayMetrics().scaledDensity); // was 48
             m = 18;
             b.setTextSize(18);

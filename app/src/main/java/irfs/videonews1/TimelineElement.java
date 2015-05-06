@@ -45,9 +45,12 @@ public class TimelineElement extends RelativeLayout {
         if (widthInterp>1f) widthInterp = 1f;
         int newWidth = (int) (textWidth * (widthInterp));
         int height;
-        if (getRootView().getTag()=="large_size") {
+        RelativeLayout mainActivityLayout = (RelativeLayout) ((MainActivity) getContext()).findViewById(R.id.main_activity);
+        if (mainActivityLayout.getTag().equals("large")) {
+            Log.d("TimelineElement","setting to large size");
            height= (int) (48 * getContext().getResources().getDisplayMetrics().scaledDensity);
         } else {
+            Log.d("TimelineElement","setting to normal size");
             height= (int) (42 * getContext().getResources().getDisplayMetrics().scaledDensity);
         }
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(newWidth,height);
@@ -83,14 +86,15 @@ public class TimelineElement extends RelativeLayout {
         setLayerType(View.LAYER_TYPE_SOFTWARE,null);
         setWillNotDraw(false);
 
-
-        if (getRootView().getTag()=="large_size") {
-
+        RelativeLayout mainActivityLayout = (RelativeLayout) ((MainActivity) getContext()).findViewById(R.id.main_activity);
+        if (mainActivityLayout.getTag().equals("large")) {
+            Log.d("TimelineElement","setting to large size");
            defaultHeight= (int) (48 * getContext().getResources().getDisplayMetrics().scaledDensity);
             hPadding = 20;
             mTextSize = 20;
         } else {
 
+            Log.d("TimelineElement","setting to normal size");
             defaultHeight= (int) (42 * getContext().getResources().getDisplayMetrics().scaledDensity);
             hPadding = 18;
             mTextSize = 18;
@@ -201,7 +205,8 @@ public class TimelineElement extends RelativeLayout {
 
         //setMeasuredDimension(300,200);
         int defaultWidth = (int) textWidth;
-        if (getRootView().getTag()=="large_size") {
+        RelativeLayout mainActivityLayout = (RelativeLayout) ((MainActivity) getContext()).findViewById(R.id.main_activity);
+            if (mainActivityLayout.getTag().equals("large")) {
            defaultHeight= (int) (48 * getContext().getResources().getDisplayMetrics().scaledDensity);
         } else {
             defaultHeight= (int) (42 * getContext().getResources().getDisplayMetrics().scaledDensity);
